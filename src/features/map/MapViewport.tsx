@@ -13,6 +13,7 @@ import {
   getRegionViewport,
 } from "@/features/map/lib/mapModel";
 import { riskFillColors } from "@/features/map/lib/riskColors";
+import { useDashboardData } from "@/shared/api/useDashboardData";
 import { Card } from "@/shared/ui/Card";
 import { cn } from "@/shared/lib/cn";
 
@@ -33,6 +34,7 @@ export function MapViewport() {
   const diseaseId = useSelectionStore((state) => state.diseaseId);
   const age = useSelectionStore((state) => state.age);
   const setRegionId = useSelectionStore((state) => state.setRegionId);
+  const { data: dashboardData } = useDashboardData();
   const mapRef = useRef<Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [regionFeatures, setRegionFeatures] = useState<RegionFeature[]>([]);
@@ -62,12 +64,12 @@ export function MapViewport() {
     () =>
       buildRegionMapData({
         features: regionFeatures,
-        observations,
+        observations: dashboardData?.observations ?? observations,
         diseaseId,
         age,
         selectedRegionId: regionId,
       }),
-    [age, diseaseId, regionFeatures, regionId],
+    [age, dashboardData?.observations, diseaseId, regionFeatures, regionId],
   );
 
   useEffect(() => {
@@ -221,7 +223,7 @@ export function MapViewport() {
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-700">
               {env.mapboxToken
                 ? "실제 서울/경기 시군구 경계 위에 위험도 색상과 선택 상태를 표시하는 첫 MVP 지도입니다."
-                : "Mapbox 토큰이 없어 fallback 상태로 보입니다. VITE_MAPBOX_TOKEN을 설정하면 실제 지도가 렌더링됩니다."}
+                : "Mapbox 토큰이 없어 fallback 상태로 보입니다. 프로젝트 루트의 .env.local 에 VITE_MAPBOX_TOKEN 을 설정하면 실제 지도가 렌더링됩니다."}
             </p>
           </div>
           <Card className="hidden max-w-xs bg-white/80 lg:block">
@@ -246,7 +248,7 @@ export function MapViewport() {
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          {observations.map((sampleObservation) => {
+          {(dashboardData?.observations ?? observations).map((sampleObservation) => {
             const region = regions.find((item) => item.id === sampleObservation.regionId);
             if (!region) {
               return null;

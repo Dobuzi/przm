@@ -1,4 +1,5 @@
 import { diseases, forecasts, observations, regions } from "@/shared/constants/mockData";
+import { useDashboardData } from "@/shared/api/useDashboardData";
 import { useSelectionStore } from "@/features/selection-context/store";
 import { Card } from "@/shared/ui/Card";
 import { SectionHeading } from "@/shared/ui/SectionHeading";
@@ -11,6 +12,9 @@ const directionLabel = {
 
 export function DetailPanel() {
   const { regionId, diseaseId, age, panelState, closePanel } = useSelectionStore();
+  const { data } = useDashboardData();
+  const currentObservations = data?.observations ?? observations;
+  const currentForecasts = data?.forecasts ?? forecasts;
 
   if (panelState === "closed") {
     return null;
@@ -18,11 +22,11 @@ export function DetailPanel() {
 
   const region = regions.find((item) => item.id === regionId);
   const disease = diseases.find((item) => item.id === diseaseId);
-  const observation = observations.find(
+  const observation = currentObservations.find(
     (item) =>
       item.regionId === regionId && item.diseaseId === diseaseId && item.age === age,
   );
-  const forecast = forecasts.find(
+  const forecast = currentForecasts.find(
     (item) =>
       item.regionId === regionId && item.diseaseId === diseaseId && item.age === age,
   );
@@ -73,4 +77,3 @@ export function DetailPanel() {
     </Card>
   );
 }
-
