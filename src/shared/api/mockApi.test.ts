@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { fetchDashboardData } from "@/shared/api/mockApi";
+import {
+  fetchDashboardData,
+  fetchDiseases,
+  fetchForecasts,
+  fetchObservations,
+  fetchRegions,
+} from "@/shared/api/mockApi";
 
 describe("fetchDashboardData", () => {
   it("filters dashboard data by region, disease, and age", async () => {
@@ -25,5 +31,38 @@ describe("fetchDashboardData", () => {
 
     expect(data.observations).toEqual([]);
     expect(data.forecasts).toEqual([]);
+  });
+
+  it("fetches filtered observations as API records", async () => {
+    const response = await fetchObservations({
+      regionId: "31023",
+      diseaseId: "flu-a",
+      age: 7,
+    });
+
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].observation_id).toBe("obs-1");
+  });
+
+  it("fetches filtered forecasts as API records", async () => {
+    const response = await fetchForecasts({
+      regionId: "31023",
+      diseaseId: "flu-a",
+      age: 7,
+    });
+
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].forecast_id).toBe("fc-1");
+  });
+
+  it("returns region and disease metadata", async () => {
+    const [regionResponse, diseaseResponse] = await Promise.all([
+      fetchRegions(),
+      fetchDiseases(),
+    ]);
+
+    expect(regionResponse.items.length).toBeGreaterThan(10);
+    expect(regionResponse.items.some((item) => item.region_id === "11160")).toBe(true);
+    expect(diseaseResponse.items.some((item) => item.disease_id === "flu-a")).toBe(true);
   });
 });

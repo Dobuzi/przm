@@ -27,3 +27,26 @@ export interface DashboardResponse {
   forecasts: ForecastRecord[];
 }
 
+export interface ObservationsResponse {
+  items: ObservationRecord[];
+}
+
+export interface ForecastsResponse {
+  items: ForecastRecord[];
+}
+
+export interface RegionsResponse {
+  items: Array<{
+    region_id: string;
+    name: string;
+    province: string;
+  }>;
+}
+
+export interface DiseasesResponse {
+  items: Array<{
+    disease_id: string;
+    display_name: string;
+    is_active: boolean;
+  }>;
+}
