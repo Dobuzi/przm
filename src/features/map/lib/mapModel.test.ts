@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildRegionMapData } from "@/features/map/lib/mapModel";
+import {
+  buildRegionMapData,
+  getRegionViewport,
+} from "@/features/map/lib/mapModel";
 import { diseases, observations } from "@/shared/constants/mockData";
 import { regionFeatures } from "@/features/map/data/mockRegions";
 
@@ -25,5 +28,14 @@ describe("buildRegionMapData", () => {
     expect(selected?.properties.diseaseFocus).toBe(true);
     expect(neutral?.properties.isSelected).toBe(false);
     expect(neutral?.properties.diseaseFocus).toBe(false);
+  });
+
+  it("returns a focused viewport for the selected region", () => {
+    const viewport = getRegionViewport(regionFeatures, "gyeonggi-suwon");
+
+    expect(viewport).toEqual({
+      center: [127.065, 37.26],
+      zoom: 10.4,
+    });
   });
 });

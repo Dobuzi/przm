@@ -55,8 +55,16 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 
 현재는 제품 정의 문서와 초기 프론트엔드 scaffold가 정리된 상태입니다. 의존성 설치와 production build 검증까지 완료했습니다.
 
+## Local Setup
+
+```bash
+cp .env.example .env.local
+```
+
+`VITE_MAPBOX_TOKEN`을 설정하면 메인 화면에서 실제 Mapbox 지도가 렌더링됩니다. 토큰이 없으면 fallback 상태로 동작합니다.
+
 다음으로 자연스러운 작업은 아래 중 하나입니다.
 
-1. 실제 Mapbox 지도와 원격 데이터 계층 연결
-2. 지도/패널 중심 MVP 화면 구현 시작
+1. mock polygon을 실제 서울/경기 시군구 GeoJSON으로 교체
+2. 지도/패널 중심 MVP 화면 구현 계속 진행
 3. 분석/예측 placeholder를 실제 데이터 흐름으로 교체

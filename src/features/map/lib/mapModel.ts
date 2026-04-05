@@ -17,6 +17,11 @@ interface BuildRegionMapDataParams {
   selectedRegionId: string;
 }
 
+interface RegionViewport {
+  center: [number, number];
+  zoom: number;
+}
+
 export function buildRegionMapData({
   features,
   observations,
@@ -51,3 +56,20 @@ export function buildRegionMapData({
   };
 }
 
+export function getRegionViewport(
+  features: Feature<Polygon, RegionFeatureProperties>[],
+  selectedRegionId: string,
+): RegionViewport | null {
+  const region = features.find(
+    (feature) => feature.properties.regionId === selectedRegionId,
+  );
+
+  if (!region) {
+    return null;
+  }
+
+  return {
+    center: region.properties.center,
+    zoom: region.properties.zoom,
+  };
+}

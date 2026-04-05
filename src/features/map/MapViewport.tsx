@@ -5,7 +5,10 @@ import { observations, regions } from "@/shared/constants/mockData";
 import { env } from "@/shared/config/env";
 import { useSelectionStore } from "@/features/selection-context/store";
 import { mockRegionsGeoJson } from "@/features/map/data/mockRegions";
-import { buildRegionMapData } from "@/features/map/lib/mapModel";
+import {
+  buildRegionMapData,
+  getRegionViewport,
+} from "@/features/map/lib/mapModel";
 import { riskFillColors } from "@/features/map/lib/riskColors";
 import { Card } from "@/shared/ui/Card";
 import { cn } from "@/shared/lib/cn";
@@ -159,6 +162,20 @@ export function MapViewport() {
     const source = mapRef.current?.getSource(sourceId) as GeoJSONSource | undefined;
     source?.setData(mapData);
   }, [mapData]);
+
+  useEffect(() => {
+    const viewport = getRegionViewport(mockRegionsGeoJson.features, regionId);
+    if (!mapRef.current || !viewport) {
+      return;
+    }
+
+    mapRef.current.flyTo({
+      center: viewport.center,
+      zoom: viewport.zoom,
+      duration: 900,
+      essential: true,
+    });
+  }, [regionId]);
 
   return (
     <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] border border-white/60 bg-[linear-gradient(140deg,#dbeafe_0%,#b9dff7_35%,#e7f2fb_100%)] shadow-panel">
