@@ -2,6 +2,7 @@ import type { GeoJSONSource, Map } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { observations, regions } from "@/shared/constants/mockData";
+import { normalizeObservation } from "@/shared/api/adapters";
 import { env } from "@/shared/config/env";
 import { useSelectionStore } from "@/features/selection-context/store";
 import {
@@ -13,7 +14,7 @@ import {
   getRegionViewport,
 } from "@/features/map/lib/mapModel";
 import { riskFillColors } from "@/features/map/lib/riskColors";
-import { useDashboardData } from "@/shared/api/useDashboardData";
+import { useObservations } from "@/shared/api/useObservations";
 import { Card } from "@/shared/ui/Card";
 import { cn } from "@/shared/lib/cn";
 
@@ -34,7 +35,7 @@ export function MapViewport() {
   const diseaseId = useSelectionStore((state) => state.diseaseId);
   const age = useSelectionStore((state) => state.age);
   const setRegionId = useSelectionStore((state) => state.setRegionId);
-  const { data: dashboardData } = useDashboardData();
+  const { data: observationResponse } = useObservations();
   const mapRef = useRef<Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [regionFeatures, setRegionFeatures] = useState<RegionFeature[]>([]);
@@ -64,12 +65,12 @@ export function MapViewport() {
     () =>
       buildRegionMapData({
         features: regionFeatures,
-        observations: dashboardData?.observations ?? observations,
+        observations: observationResponse?.items.map(normalizeObservation) ?? observations,
         diseaseId,
         age,
         selectedRegionId: regionId,
       }),
-    [age, dashboardData?.observations, diseaseId, regionFeatures, regionId],
+    [age, diseaseId, observationResponse?.items, regionFeatures, regionId],
   );
 
   useEffect(() => {
@@ -248,7 +249,8 @@ export function MapViewport() {
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          {(dashboardData?.observations ?? observations).map((sampleObservation) => {
+          {(observationResponse?.items.map(normalizeObservation) ?? observations).map(
+            (sampleObservation) => {
             const region = regions.find((item) => item.id === sampleObservation.regionId);
             if (!region) {
               return null;
@@ -278,7 +280,8 @@ export function MapViewport() {
                 </p>
               </button>
             );
-          })}
+            },
+          )}
         </div>
       </div>
     </div>

@@ -1,5 +1,10 @@
 import { diseases, forecasts, observations, regions } from "@/shared/constants/mockData";
-import { useDashboardData } from "@/shared/api/useDashboardData";
+import {
+  normalizeForecast,
+  normalizeObservation,
+} from "@/shared/api/adapters";
+import { useForecasts } from "@/shared/api/useForecasts";
+import { useObservations } from "@/shared/api/useObservations";
 import { useSelectionStore } from "@/features/selection-context/store";
 import { Card } from "@/shared/ui/Card";
 
@@ -11,9 +16,12 @@ const directionLabel = {
 
 export function SummaryCard() {
   const { regionId, diseaseId, age, openPanel } = useSelectionStore();
-  const { data } = useDashboardData();
-  const currentObservations = data?.observations ?? observations;
-  const currentForecasts = data?.forecasts ?? forecasts;
+  const { data: observationResponse } = useObservations();
+  const { data: forecastResponse } = useForecasts();
+  const currentObservations =
+    observationResponse?.items.map(normalizeObservation) ?? observations;
+  const currentForecasts =
+    forecastResponse?.items.map(normalizeForecast) ?? forecasts;
   const region = regions.find((item) => item.id === regionId);
   const disease = diseases.find((item) => item.id === diseaseId);
   const observation = currentObservations.find(

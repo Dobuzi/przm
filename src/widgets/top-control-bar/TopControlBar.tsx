@@ -1,7 +1,12 @@
 import { diseases, regions } from "@/shared/constants/mockData";
+import { normalizeDiseases, normalizeRegions } from "@/shared/api/adapters";
+import { useDiseases } from "@/shared/api/useDiseases";
+import { useRegions } from "@/shared/api/useRegions";
 import { useSelectionStore } from "@/features/selection-context/store";
 
 export function TopControlBar() {
+  const { data: regionResponse } = useRegions();
+  const { data: diseaseResponse } = useDiseases();
   const {
     regionId,
     diseaseId,
@@ -10,6 +15,8 @@ export function TopControlBar() {
     setDiseaseId,
     setAge,
   } = useSelectionStore();
+  const currentRegions = regionResponse ? normalizeRegions(regionResponse) : regions;
+  const currentDiseases = diseaseResponse ? normalizeDiseases(diseaseResponse) : diseases;
 
   return (
     <div className="flex flex-col gap-3 rounded-[2rem] border border-white/70 bg-white/85 p-4 shadow-panel backdrop-blur lg:flex-row lg:items-center lg:justify-between">
@@ -30,7 +37,7 @@ export function TopControlBar() {
             value={regionId}
             onChange={(event) => setRegionId(event.target.value)}
           >
-            {regions.map((region) => (
+            {currentRegions.map((region) => (
               <option key={region.id} value={region.id}>
                 {region.name}
               </option>
@@ -45,7 +52,7 @@ export function TopControlBar() {
             value={diseaseId}
             onChange={(event) => setDiseaseId(event.target.value)}
           >
-            {diseases.map((disease) => (
+            {currentDiseases.map((disease) => (
               <option key={disease.id} value={disease.id}>
                 {disease.name}
               </option>
@@ -71,4 +78,3 @@ export function TopControlBar() {
     </div>
   );
 }
-

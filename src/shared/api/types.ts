@@ -36,17 +36,21 @@ export interface ForecastsResponse {
 }
 
 export interface RegionsResponse {
-  items: Array<{
-    region_id: string;
-    name: string;
-    province: string;
-  }>;
+  items: RegionRecord[];
 }
 
 export interface DiseasesResponse {
-  items: Array<{
-    disease_id: string;
-    display_name: string;
-    is_active: boolean;
-  }>;
+  items: DiseaseRecord[];
+}
+
+export interface RegionRecord {
+  region_id: string;
+  name: string;
+  province: string;
+}
+
+export interface DiseaseRecord {
+  disease_id: string;
+  display_name: string;
+  is_active: boolean;
 }
