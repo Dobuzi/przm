@@ -4,12 +4,9 @@ import type {
   Observation,
   Region,
 } from "@/shared/types/domain";
+import { regionOptions } from "@/features/map/data/regionOptions";
 
-export const regions: Region[] = [
-  { id: "seoul-gangseo", name: "서울 강서구", province: "서울특별시" },
-  { id: "gyeonggi-bundang", name: "성남시 분당구", province: "경기도" },
-  { id: "gyeonggi-suwon", name: "수원시 영통구", province: "경기도" },
-];
+export const regions: Region[] = regionOptions;
 
 export const diseases: Disease[] = [
   { id: "flu-a", name: "독감 A형" },
@@ -20,7 +17,7 @@ export const diseases: Disease[] = [
 export const observations: Observation[] = [
   {
     id: "obs-1",
-    regionId: "gyeonggi-bundang",
+    regionId: "31023",
     diseaseId: "flu-a",
     age: 7,
     riskLevel: "high",
@@ -28,7 +25,7 @@ export const observations: Observation[] = [
   },
   {
     id: "obs-2",
-    regionId: "seoul-gangseo",
+    regionId: "11160",
     diseaseId: "rsv",
     age: 5,
     riskLevel: "medium",
@@ -36,7 +33,7 @@ export const observations: Observation[] = [
   },
   {
     id: "obs-3",
-    regionId: "gyeonggi-suwon",
+    regionId: "31014",
     diseaseId: "adeno",
     age: 9,
     riskLevel: "low",
@@ -47,7 +44,7 @@ export const observations: Observation[] = [
 export const forecasts: Forecast[] = [
   {
     id: "fc-1",
-    regionId: "gyeonggi-bundang",
+    regionId: "31023",
     diseaseId: "flu-a",
     age: 7,
     weekDirection: "increase",
@@ -55,4 +52,3 @@ export const forecasts: Forecast[] = [
     confidence: "medium",
   },
 ];
-

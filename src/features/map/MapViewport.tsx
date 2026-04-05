@@ -1,10 +1,13 @@
 import type { GeoJSONSource, Map } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { observations, regions } from "@/shared/constants/mockData";
 import { env } from "@/shared/config/env";
 import { useSelectionStore } from "@/features/selection-context/store";
-import { mockRegionsGeoJson } from "@/features/map/data/mockRegions";
+import {
+  loadRegionFeatureCollection,
+  type RegionFeature,
+} from "@/features/map/data/regionData";
 import {
   buildRegionMapData,
   getRegionViewport,
@@ -32,17 +35,39 @@ export function MapViewport() {
   const setRegionId = useSelectionStore((state) => state.setRegionId);
   const mapRef = useRef<Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const [regionFeatures, setRegionFeatures] = useState<RegionFeature[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadRegions = async () => {
+      try {
+        const collection = await loadRegionFeatureCollection();
+        if (!cancelled) {
+          setRegionFeatures(collection.features as RegionFeature[]);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    void loadRegions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const mapData = useMemo(
     () =>
       buildRegionMapData({
-        features: mockRegionsGeoJson.features,
+        features: regionFeatures,
         observations,
         diseaseId,
         age,
         selectedRegionId: regionId,
       }),
-    [age, diseaseId, regionId],
+    [age, diseaseId, regionFeatures, regionId],
   );
 
   useEffect(() => {
@@ -164,7 +189,7 @@ export function MapViewport() {
   }, [mapData]);
 
   useEffect(() => {
-    const viewport = getRegionViewport(mockRegionsGeoJson.features, regionId);
+    const viewport = getRegionViewport(regionFeatures, regionId);
     if (!mapRef.current || !viewport) {
       return;
     }
@@ -195,7 +220,7 @@ export function MapViewport() {
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-700">
               {env.mapboxToken
-                ? "시군구 단위 mock polygon 위에 위험도 색상과 선택 상태를 표시하는 첫 MVP 지도입니다."
+                ? "실제 서울/경기 시군구 경계 위에 위험도 색상과 선택 상태를 표시하는 첫 MVP 지도입니다."
                 : "Mapbox 토큰이 없어 fallback 상태로 보입니다. VITE_MAPBOX_TOKEN을 설정하면 실제 지도가 렌더링됩니다."}
             </p>
           </div>
@@ -221,8 +246,12 @@ export function MapViewport() {
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          {regions.map((region) => {
-            const observation = observations.find((item) => item.regionId === region.id);
+          {observations.map((sampleObservation) => {
+            const region = regions.find((item) => item.id === sampleObservation.regionId);
+            if (!region) {
+              return null;
+            }
+
             const isSelected = region.id === regionId;
 
             return (
@@ -232,7 +261,7 @@ export function MapViewport() {
                 onClick={() => setRegionId(region.id)}
                 className={cn(
                   "rounded-3xl border border-white/60 p-4 text-left transition",
-                  riskClasses[observation?.riskLevel ?? "low"],
+                  riskClasses[sampleObservation.riskLevel ?? "low"],
                   isSelected
                     ? "ring-4 ring-ocean/20"
                     : "opacity-90 hover:-translate-y-0.5 hover:opacity-100",
@@ -243,7 +272,7 @@ export function MapViewport() {
                 </p>
                 <p className="mt-2 text-lg font-semibold">{region.name}</p>
                 <p className="mt-2 text-sm">
-                  {observation?.trendSummary ?? "관측 데이터 준비 중"}
+                  {sampleObservation.trendSummary}
                 </p>
               </button>
             );

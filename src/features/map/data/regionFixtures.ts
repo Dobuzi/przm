@@ -1,28 +1,12 @@
-import type { Feature, FeatureCollection, Polygon } from "geojson";
+import type { RegionFeature } from "@/features/map/data/regionData";
 
-export interface RegionFeatureProperties {
-  regionId: string;
-  name: string;
-  province: string;
-  center: [number, number];
-  zoom: number;
-}
-
-export type RegionFeature = Feature<Polygon, RegionFeatureProperties>;
-export type RegionFeatureCollection = FeatureCollection<
-  Polygon,
-  RegionFeatureProperties
->;
-
-export const regionFeatures: RegionFeature[] = [
+export const regionFixtures: RegionFeature[] = [
   {
     type: "Feature",
     properties: {
-      regionId: "seoul-gangseo",
-      name: "서울 강서구",
+      regionId: "11160",
+      name: "강서구",
       province: "서울특별시",
-      center: [126.84, 37.585],
-      zoom: 10.4,
     },
     geometry: {
       type: "Polygon",
@@ -40,11 +24,9 @@ export const regionFeatures: RegionFeature[] = [
   {
     type: "Feature",
     properties: {
-      regionId: "gyeonggi-bundang",
-      name: "성남시 분당구",
+      regionId: "31023",
+      name: "성남시분당구",
       province: "경기도",
-      center: [127.105, 37.375],
-      zoom: 10.4,
     },
     geometry: {
       type: "Polygon",
@@ -62,11 +44,9 @@ export const regionFeatures: RegionFeature[] = [
   {
     type: "Feature",
     properties: {
-      regionId: "gyeonggi-suwon",
-      name: "수원시 영통구",
+      regionId: "31014",
+      name: "수원시영통구",
       province: "경기도",
-      center: [127.065, 37.26],
-      zoom: 10.4,
     },
     geometry: {
       type: "Polygon",
@@ -83,7 +63,3 @@ export const regionFeatures: RegionFeature[] = [
   },
 ];
 
-export const mockRegionsGeoJson: RegionFeatureCollection = {
-  type: "FeatureCollection",
-  features: regionFeatures,
-};

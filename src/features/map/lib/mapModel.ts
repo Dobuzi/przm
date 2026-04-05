@@ -1,6 +1,9 @@
-import type { Feature, FeatureCollection, Polygon } from "geojson";
+import type { Feature, FeatureCollection } from "geojson";
 import type { Observation, RiskLevel } from "@/shared/types/domain";
-import type { RegionFeatureProperties } from "@/features/map/data/mockRegions";
+import type {
+  RegionFeatureProperties,
+  RegionGeometry,
+} from "@/features/map/data/regionData";
 
 export interface RegionMapProperties extends RegionFeatureProperties {
   riskLevel: RiskLevel;
@@ -10,7 +13,7 @@ export interface RegionMapProperties extends RegionFeatureProperties {
 }
 
 interface BuildRegionMapDataParams {
-  features: Feature<Polygon, RegionFeatureProperties>[];
+  features: Feature<RegionGeometry, RegionFeatureProperties>[];
   observations: Observation[];
   diseaseId: string;
   age: number;
@@ -28,7 +31,7 @@ export function buildRegionMapData({
   diseaseId,
   age,
   selectedRegionId,
-}: BuildRegionMapDataParams): FeatureCollection<Polygon, RegionMapProperties> {
+}: BuildRegionMapDataParams): FeatureCollection<RegionGeometry, RegionMapProperties> {
   return {
     type: "FeatureCollection",
     features: features.map((feature) => {
@@ -57,7 +60,7 @@ export function buildRegionMapData({
 }
 
 export function getRegionViewport(
-  features: Feature<Polygon, RegionFeatureProperties>[],
+  features: Feature<RegionGeometry, RegionFeatureProperties>[],
   selectedRegionId: string,
 ): RegionViewport | null {
   const region = features.find(
@@ -69,7 +72,61 @@ export function getRegionViewport(
   }
 
   return {
-    center: region.properties.center,
-    zoom: region.properties.zoom,
+    center: getGeometryCenter(region.geometry.coordinates),
+    zoom: getViewportZoom(region.geometry.coordinates),
   };
+}
+
+function getGeometryCenter(
+  coordinates: RegionGeometry["coordinates"],
+): [number, number] {
+  const [minLng, minLat, maxLng, maxLat] = getBounds(coordinates);
+  return [(minLng + maxLng) / 2, (minLat + maxLat) / 2];
+}
+
+function getViewportZoom(coordinates: RegionGeometry["coordinates"]): number {
+  const [minLng, minLat, maxLng, maxLat] = getBounds(coordinates);
+  const lngSpan = Math.abs(maxLng - minLng);
+  const latSpan = Math.abs(maxLat - minLat);
+  const maxSpan = Math.max(lngSpan, latSpan);
+
+  if (maxSpan < 0.08) {
+    return 10.8;
+  }
+
+  if (maxSpan < 0.14) {
+    return 10.2;
+  }
+
+  return 9.6;
+}
+
+function getBounds(coordinates: unknown): [number, number, number, number] {
+  const points = flattenCoordinates(coordinates);
+  const lngs = points.map((point) => point[0]);
+  const lats = points.map((point) => point[1]);
+
+  return [
+    Math.min(...lngs),
+    Math.min(...lats),
+    Math.max(...lngs),
+    Math.max(...lats),
+  ];
+}
+
+function flattenCoordinates(value: unknown): Array<[number, number]> {
+  if (
+    Array.isArray(value) &&
+    value.length >= 2 &&
+    typeof value[0] === "number" &&
+    typeof value[1] === "number"
+  ) {
+    return [[value[0], value[1]]];
+  }
+
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => flattenCoordinates(item));
+  }
+
+  return [];
 }

@@ -16,7 +16,7 @@ interface SelectionState {
 }
 
 export const useSelectionStore = create<SelectionState>((set) => ({
-  regionId: regions[1].id,
+  regionId: "31023",
   diseaseId: diseases[0].id,
   age: 7,
   panelState: "closed",
@@ -26,4 +26,3 @@ export const useSelectionStore = create<SelectionState>((set) => ({
   openPanel: () => set({ panelState: "open" }),
   closePanel: () => set({ panelState: "closed" }),
 }));
-
