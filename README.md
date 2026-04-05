@@ -45,12 +45,18 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 - [`docs/DATA.md`](./docs/DATA.md): 핵심 데이터 개체와 필드 초안
 - [`docs/PREDICTION.md`](./docs/PREDICTION.md): 예측 기능 구조와 사용자 노출 방식
 
+### Implementation Docs
+
+- [`docs/APP-ARCHITECTURE.md`](./docs/APP-ARCHITECTURE.md): 라우트, 기능 모듈, 상태, 데이터 흐름 구조
+- [`docs/TECH-STACK.md`](./docs/TECH-STACK.md): 초기 프론트엔드 기술 스택과 선택 이유
+- [`docs/superpowers/plans/2026-04-05-initial-scaffold.md`](./docs/superpowers/plans/2026-04-05-initial-scaffold.md): 초기 scaffold 구현 계획
+
 ## Current Status
 
-현재는 제품 정의 문서 세트가 정리된 상태입니다. 아직 구현 코드, 앱 구조, 실행 방법은 정의되지 않았습니다.
+현재는 제품 정의 문서와 초기 프론트엔드 scaffold가 정리된 상태입니다. 의존성 설치와 production build 검증까지 완료했습니다.
 
 다음으로 자연스러운 작업은 아래 중 하나입니다.
 
-1. 앱 기술 스택과 구조를 정리하는 문서 작성
-2. 실제 프론트엔드 프로젝트 scaffold 시작
-3. 지도/패널 중심 MVP 화면 구현 시작
+1. 실제 Mapbox 지도와 원격 데이터 계층 연결
+2. 지도/패널 중심 MVP 화면 구현 시작
+3. 분석/예측 placeholder를 실제 데이터 흐름으로 교체
