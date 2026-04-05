@@ -50,6 +50,7 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 - [`docs/APP-ARCHITECTURE.md`](./docs/APP-ARCHITECTURE.md): 라우트, 기능 모듈, 상태, 데이터 흐름 구조
 - [`docs/TECH-STACK.md`](./docs/TECH-STACK.md): 초기 프론트엔드 기술 스택과 선택 이유
 - [`docs/API.md`](./docs/API.md): 프론트엔드와 백엔드 사이의 초기 API 계약
+- [`docs/TASK.md`](./docs/TASK.md): 지금까지 수행한 작업과 앞으로의 우선순위 작업 정리
 - [`docs/superpowers/plans/2026-04-05-initial-scaffold.md`](./docs/superpowers/plans/2026-04-05-initial-scaffold.md): 초기 scaffold 구현 계획
 
 ## Current Status
