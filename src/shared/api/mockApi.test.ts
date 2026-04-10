@@ -42,7 +42,7 @@ describe("fetchDashboardData", () => {
     });
 
     expect(response.items).toHaveLength(1);
-    expect(response.items[0].observation_id).toBe("obs-1");
+    expect(response.items[0].observation_id).toBe("obs-31023-flu-a-7-2026-04-09");
   });
 
   it("fetches filtered forecasts as API records", async () => {
@@ -53,7 +53,7 @@ describe("fetchDashboardData", () => {
     });
 
     expect(response.items).toHaveLength(1);
-    expect(response.items[0].forecast_id).toBe("fc-1");
+    expect(response.items[0].forecast_id).toBe("fc-31023-flu-a-7-2026-04-09");
   });
 
   it("returns region and disease metadata", async () => {

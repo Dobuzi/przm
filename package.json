@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "ingest:mock": "node scripts/ingestion/run-mock-ingestion.mjs"
+    "ingest:mock": "node scripts/ingestion/run-mock-ingestion.mjs",
+    "analytics:mock": "node scripts/analytics/run-mock-analytics.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.3",

@@ -2,8 +2,10 @@ import { normalizeDashboardPayload } from "@/shared/api/adapters";
 import type {
   DashboardResponse,
   DiseasesResponse,
+  ForecastRecord,
   ForecastsResponse,
   ObservationBreakdownResponse,
+  ObservationRecord,
   ObservationsResponse,
   RegionsResponse,
 } from "@/shared/api/types";
@@ -14,6 +16,7 @@ import {
   observations,
   regions,
 } from "@/shared/constants/mockData";
+import { mockSnapshotCandidate } from "@/shared/constants/mockSnapshotCandidate";
 
 interface DashboardFilters {
   regionId?: string;
@@ -46,13 +49,37 @@ function matchesFilters(
     return true;
 }
 
-export async function fetchObservations(
-  filters: DashboardFilters = {},
-): Promise<ObservationsResponse> {
-  await sleep(180);
+function toSelectionKey(item: {
+  regionId: string;
+  diseaseId: string;
+  age: number;
+}) {
+  return `${item.regionId}:${item.diseaseId}:${item.age}`;
+}
 
-  const items = observations
-    .filter((item) => matchesFilters(item, filters))
+function buildObservationItems(): ObservationRecord[] {
+  const derivedItems = mockSnapshotCandidate.observations;
+  const derivedKeys = new Set(
+    derivedItems.map((item) =>
+      toSelectionKey({
+        regionId: item.region_id,
+        diseaseId: item.disease_id,
+        age: item.age,
+      }),
+    ),
+  );
+
+  const fallbackItems = observations
+    .filter(
+      (item) =>
+        !derivedKeys.has(
+          toSelectionKey({
+            regionId: item.regionId,
+            diseaseId: item.diseaseId,
+            age: item.age,
+          }),
+        ),
+    )
     .map((item) => ({
       observation_id: item.id,
       region_id: item.regionId,
@@ -62,16 +89,32 @@ export async function fetchObservations(
       trend_summary: item.trendSummary,
     }));
 
-  return { items };
+  return [...derivedItems, ...fallbackItems];
 }
 
-export async function fetchForecasts(
-  filters: DashboardFilters = {},
-): Promise<ForecastsResponse> {
-  await sleep(180);
+function buildForecastItems(): ForecastRecord[] {
+  const derivedItems = mockSnapshotCandidate.forecasts;
+  const derivedKeys = new Set(
+    derivedItems.map((item) =>
+      toSelectionKey({
+        regionId: item.region_id,
+        diseaseId: item.disease_id,
+        age: item.age,
+      }),
+    ),
+  );
 
-  const items = forecasts
-    .filter((item) => matchesFilters(item, filters))
+  const fallbackItems = forecasts
+    .filter(
+      (item) =>
+        !derivedKeys.has(
+          toSelectionKey({
+            regionId: item.regionId,
+            diseaseId: item.diseaseId,
+            age: item.age,
+          }),
+        ),
+    )
     .map((item) => ({
       forecast_id: item.id,
       region_id: item.regionId,
@@ -81,6 +124,44 @@ export async function fetchForecasts(
       month_direction: item.monthDirection,
       confidence: item.confidence,
     }));
+
+  return [...derivedItems, ...fallbackItems];
+}
+
+export async function fetchObservations(
+  filters: DashboardFilters = {},
+): Promise<ObservationsResponse> {
+  await sleep(180);
+
+  const items = buildObservationItems().filter((item) =>
+    matchesFilters(
+      {
+        regionId: item.region_id,
+        diseaseId: item.disease_id,
+        age: item.age,
+      },
+      filters,
+    ),
+  );
+
+  return { items };
+}
+
+export async function fetchForecasts(
+  filters: DashboardFilters = {},
+): Promise<ForecastsResponse> {
+  await sleep(180);
+
+  const items = buildForecastItems().filter((item) =>
+    matchesFilters(
+      {
+        regionId: item.region_id,
+        diseaseId: item.disease_id,
+        age: item.age,
+      },
+      filters,
+    ),
+  );
 
   return { items };
 }
