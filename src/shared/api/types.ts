@@ -54,3 +54,20 @@ export interface DiseaseRecord {
   display_name: string;
   is_active: boolean;
 }
+
+export interface ObservationBreakdownResponse {
+  summary: string;
+  recent_trend: Array<{
+    week_label: string;
+    risk_level: RiskLevel;
+    cases: number;
+  }>;
+  age_distribution: Array<{
+    age: number;
+    cases: number;
+  }>;
+  gender_distribution: Array<{
+    gender: "male" | "female";
+    cases: number;
+  }>;
+}

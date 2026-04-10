@@ -6,13 +6,11 @@ import {
 import { useForecasts } from "@/shared/api/useForecasts";
 import { useObservations } from "@/shared/api/useObservations";
 import { useSelectionStore } from "@/features/selection-context/store";
+import {
+  buildForecastPresentation,
+  buildForecastSummary,
+} from "@/shared/lib/forecastPresentation";
 import { Card } from "@/shared/ui/Card";
-
-const directionLabel = {
-  increase: "증가",
-  steady: "정체",
-  decrease: "감소",
-};
 
 export function SummaryCard() {
   const { regionId, diseaseId, age, openPanel } = useSelectionStore();
@@ -32,6 +30,11 @@ export function SummaryCard() {
     (item) =>
       item.regionId === regionId && item.diseaseId === diseaseId && item.age === age,
   );
+  const forecastPresentation = buildForecastPresentation(forecast);
+  const forecastSummary = buildForecastSummary(
+    observation?.riskLevel ?? "low",
+    forecast,
+  );
 
   return (
     <Card className="w-full max-w-md">
@@ -44,21 +47,36 @@ export function SummaryCard() {
       <p className="mt-3 text-sm leading-6 text-slate-700">
         {disease?.name} 기준으로 {observation?.trendSummary ?? "관측 데이터 준비 중"}.
       </p>
+      <div className="mt-4 rounded-2xl border border-slate-200 bg-white/80 p-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ocean/70">
+          Forecast
+        </p>
+        <p className="mt-2 text-base font-semibold text-ink">
+          {forecastPresentation.headline}
+        </p>
+        <p className="mt-1 text-sm text-slate-600">{forecastSummary}</p>
+      </div>
       <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-slate-600">
         <div className="rounded-2xl bg-slate-50 p-3">
           <p className="font-medium text-slate-800">1주 예측</p>
           <p className="mt-1 text-lg font-semibold text-ocean">
-            {forecast ? directionLabel[forecast.weekDirection] : "준비 중"}
+            {forecastPresentation.week.label}
+          </p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">
+            {forecastPresentation.week.description}
           </p>
         </div>
         <div className="rounded-2xl bg-slate-50 p-3">
           <p className="font-medium text-slate-800">1달 예측</p>
           <p className="mt-1 text-lg font-semibold text-ocean">
-            {forecast ? directionLabel[forecast.monthDirection] : "준비 중"}
+            {forecastPresentation.month.label}
+          </p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">
+            {forecastPresentation.month.description}
           </p>
         </div>
       </div>
-      <button
+    <button
         type="button"
         onClick={openPanel}
         className="mt-5 rounded-full bg-ocean px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0c3f6a]"

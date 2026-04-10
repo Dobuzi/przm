@@ -3,12 +3,14 @@ import type {
   DashboardResponse,
   DiseasesResponse,
   ForecastsResponse,
+  ObservationBreakdownResponse,
   ObservationsResponse,
   RegionsResponse,
 } from "@/shared/api/types";
 import {
   diseases,
   forecasts,
+  observationBreakdowns,
   observations,
   regions,
 } from "@/shared/constants/mockData";
@@ -103,6 +105,56 @@ export async function fetchDiseases(): Promise<DiseasesResponse> {
       disease_id: item.id,
       display_name: item.name,
       is_active: true,
+    })),
+  };
+}
+
+export async function fetchObservationBreakdown(
+  filters: DashboardFilters = {},
+): Promise<ObservationBreakdownResponse> {
+  await sleep(180);
+
+  const item = observationBreakdowns.find((entry) => matchesFilters(entry, filters));
+
+  if (!item) {
+    return {
+      summary: "",
+      recent_trend: [],
+      age_distribution: [],
+      gender_distribution: [],
+    };
+  }
+
+  return {
+    summary: item.summary,
+    recent_trend: item.recentTrend.map((point) => ({
+      week_label: point.weekLabel,
+      risk_level: point.riskLevel,
+      cases: point.cases,
+    })),
+    age_distribution: [...item.ageDistribution]
+      .sort((left, right) => {
+        if (typeof filters.age !== "number") {
+          return left.age - right.age;
+        }
+
+        if (left.age === filters.age) {
+          return -1;
+        }
+
+        if (right.age === filters.age) {
+          return 1;
+        }
+
+        return left.age - right.age;
+      })
+      .map((point) => ({
+        age: point.age,
+        cases: point.cases,
+      })),
+    gender_distribution: item.genderDistribution.map((point) => ({
+      gender: point.gender,
+      cases: point.cases,
     })),
   };
 }

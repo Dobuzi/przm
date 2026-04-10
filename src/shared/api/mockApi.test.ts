@@ -3,6 +3,7 @@ import {
   fetchDashboardData,
   fetchDiseases,
   fetchForecasts,
+  fetchObservationBreakdown,
   fetchObservations,
   fetchRegions,
 } from "@/shared/api/mockApi";
@@ -64,5 +65,29 @@ describe("fetchDashboardData", () => {
     expect(regionResponse.items.length).toBeGreaterThan(10);
     expect(regionResponse.items.some((item) => item.region_id === "11160")).toBe(true);
     expect(diseaseResponse.items.some((item) => item.disease_id === "flu-a")).toBe(true);
+  });
+
+  it("returns filtered observation breakdown data for the detail panel", async () => {
+    const response = await fetchObservationBreakdown({
+      regionId: "31023",
+      diseaseId: "flu-a",
+      age: 7,
+    });
+
+    expect(response.summary).toBe("최근 7일 확산세 증가");
+    expect(response.recent_trend).toHaveLength(4);
+    expect(response.recent_trend[0]).toEqual({
+      week_label: "4주 전",
+      risk_level: "medium",
+      cases: 18,
+    });
+    expect(response.age_distribution[0]).toEqual({
+      age: 7,
+      cases: 22,
+    });
+    expect(response.gender_distribution).toEqual([
+      { gender: "male", cases: 12 },
+      { gender: "female", cases: 10 },
+    ]);
   });
 });

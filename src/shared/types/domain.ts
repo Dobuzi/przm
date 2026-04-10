@@ -31,3 +31,25 @@ export interface Forecast {
   confidence: "low" | "medium" | "high";
 }
 
+export interface ObservationTrendPoint {
+  weekLabel: string;
+  riskLevel: RiskLevel;
+  cases: number;
+}
+
+export interface ObservationAgePoint {
+  age: number;
+  cases: number;
+}
+
+export interface ObservationGenderPoint {
+  gender: "male" | "female";
+  cases: number;
+}
+
+export interface ObservationBreakdown {
+  summary: string;
+  recentTrend: ObservationTrendPoint[];
+  ageDistribution: ObservationAgePoint[];
+  genderDistribution: ObservationGenderPoint[];
+}
