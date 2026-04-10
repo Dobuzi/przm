@@ -8,6 +8,7 @@ import type {
 export interface RegionMapProperties extends RegionFeatureProperties {
   riskLevel: RiskLevel;
   isSelected: boolean;
+  isComparison: boolean;
   diseaseFocus: boolean;
   trendSummary: string;
 }
@@ -18,6 +19,7 @@ interface BuildRegionMapDataParams {
   diseaseId: string;
   age: number;
   selectedRegionId: string;
+  comparisonRegionId?: string;
 }
 
 interface RegionViewport {
@@ -31,6 +33,7 @@ export function buildRegionMapData({
   diseaseId,
   age,
   selectedRegionId,
+  comparisonRegionId,
 }: BuildRegionMapDataParams): FeatureCollection<RegionGeometry, RegionMapProperties> {
   return {
     type: "FeatureCollection",
@@ -49,6 +52,7 @@ export function buildRegionMapData({
           ...feature.properties,
           riskLevel: activeObservation?.riskLevel ?? "low",
           isSelected: feature.properties.regionId === selectedRegionId,
+          isComparison: feature.properties.regionId === comparisonRegionId,
           diseaseFocus:
             activeObservation?.diseaseId === diseaseId &&
             activeObservation?.age === age,

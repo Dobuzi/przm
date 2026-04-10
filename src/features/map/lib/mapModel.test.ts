@@ -14,6 +14,7 @@ describe("buildRegionMapData", () => {
       diseaseId: diseases[0].id,
       age: 7,
       selectedRegionId: "31023",
+      comparisonRegionId: "11160",
     });
 
     const selected = mapData.features.find(
@@ -24,9 +25,11 @@ describe("buildRegionMapData", () => {
     );
 
     expect(selected?.properties.isSelected).toBe(true);
+    expect(selected?.properties.isComparison).toBe(false);
     expect(selected?.properties.riskLevel).toBe("high");
     expect(selected?.properties.diseaseFocus).toBe(true);
     expect(comparisonRegion?.properties.isSelected).toBe(false);
+    expect(comparisonRegion?.properties.isComparison).toBe(true);
     expect(comparisonRegion?.properties.riskLevel).toBe("medium");
     expect(comparisonRegion?.properties.diseaseFocus).toBe(true);
   });

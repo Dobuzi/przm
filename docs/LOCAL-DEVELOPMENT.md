@@ -12,6 +12,7 @@
 npm install
 cp .env.example .env.local
 npm run dev
+npm run ingest:mock
 ```
 
 ## 환경 변수
@@ -108,10 +109,38 @@ hook -> apiClient -> mock client or real HTTP client
 - 상세 분석 breakdown
 - 1주/1달 예측
 
+## Mock ingestion 실행
+
+문서 기준의 ingestion 흐름을 로컬에서 빠르게 확인하려면 아래 명령을 사용한다.
+
+```bash
+npm run ingest:mock
+```
+
+이 명령은 샘플 source fixture를 읽어 아래 파일을 생성한다.
+
+```text
+tmp/ingestion/mock-ingestion-output.json
+```
+
+출력에는 아래가 포함된다.
+
+- `rawRecords`
+- `normalizedRecords`
+- `quarantinedRecords`
+- `summary`
+
+현재 샘플 fixture 기준 예상 summary는 아래다.
+
+- raw `5`
+- normalized `2`
+- quarantined `3`
+
 ## 검증 명령
 
 ```bash
 npm run test -- src/shared/api/client.test.ts src/shared/api/mockApi.test.ts src/shared/api/adapters.test.ts src/shared/lib/forecastPresentation.test.ts src/features/map/lib/mapPresentation.test.ts src/features/map/lib/mapModel.test.ts
+npm run test -- scripts/ingestion/lib/pipeline.test.mjs
 npm run build
 ```
 

@@ -1,9 +1,16 @@
-export type RegionCardTone = "selected" | "hovered" | "focused" | "default";
+export type RegionCardTone =
+  | "selected"
+  | "comparison"
+  | "hovered"
+  | "focused"
+  | "default";
 
 interface RegionCardPresentationInput {
   isSelected: boolean;
+  isComparison: boolean;
   isHovered: boolean;
   isFocused: boolean;
+  comparisonMode?: "none" | "region" | "disease";
 }
 
 interface RegionCardPresentation {
@@ -13,7 +20,7 @@ interface RegionCardPresentation {
 }
 
 interface LegendItem {
-  key: "low" | "medium" | "high" | "selected" | "focused";
+  key: "low" | "medium" | "high" | "selected" | "comparison" | "focused";
   label: string;
   description: string;
 }
@@ -25,7 +32,18 @@ export function buildRegionCardPresentation(
     return {
       badge: "선택 지역",
       tone: "selected",
-      description: "현재 지도와 상세 정보의 기준 지역입니다.",
+      description:
+        input.comparisonMode === "disease"
+          ? "현재 지도와 상세 정보의 기준 지역이며, 질병 비교도 이 지역 안에서 진행 중입니다."
+          : "현재 지도와 상세 정보의 기준 지역입니다.",
+    };
+  }
+
+  if (input.isComparison) {
+    return {
+      badge: "비교 지역",
+      tone: "comparison",
+      description: "상세 패널에서 현재 기준 지역과 비교하는 대상 지역입니다.",
     };
   }
 
@@ -52,12 +70,22 @@ export function buildRegionCardPresentation(
   };
 }
 
-export function buildLegendItems(): LegendItem[] {
-  return [
-    { key: "low", label: "낮음", description: "현재 위험 신호가 비교적 낮은 지역" },
-    { key: "medium", label: "보통", description: "지켜볼 필요가 있는 지역" },
-    { key: "high", label: "높음", description: "현재 주의가 필요한 지역" },
-    { key: "selected", label: "선택 지역", description: "지금 분석 기준으로 보는 지역" },
-    { key: "focused", label: "질병 포커스", description: "선택한 질병 기준으로 주목할 지역" },
+export function buildLegendItems(hasComparisonRegion = false): LegendItem[] {
+  const items: LegendItem[] = [
+      { key: "low", label: "낮음", description: "현재 위험 신호가 비교적 낮은 지역" },
+      { key: "medium", label: "보통", description: "지켜볼 필요가 있는 지역" },
+      { key: "high", label: "높음", description: "현재 주의가 필요한 지역" },
+      { key: "selected", label: "선택 지역", description: "지금 분석 기준으로 보는 지역" },
+      { key: "focused", label: "질병 포커스", description: "선택한 질병 기준으로 주목할 지역" },
   ];
+
+  if (hasComparisonRegion) {
+    items.splice(4, 0, {
+      key: "comparison",
+      label: "비교 지역",
+      description: "상세 패널에서 현재 기준과 비교 중인 지역",
+    });
+  }
+
+  return items;
 }

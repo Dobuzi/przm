@@ -1,0 +1,52 @@
+[
+  {
+    "source_name": "sample-public-health",
+    "source_record_id": "sample-001",
+    "reported_date": "2026-04-09",
+    "region_label": "성남시 분당구",
+    "disease_label": "Flu A",
+    "age_raw": "7",
+    "gender_raw": "M",
+    "case_count_raw": "22"
+  },
+  {
+    "source_name": "sample-public-health",
+    "source_record_id": "sample-002",
+    "reported_date": "2026-04-09",
+    "region_label": "서울 강서구",
+    "disease_label": "respiratory syncytial virus",
+    "age_raw": "5세",
+    "gender_raw": "F",
+    "case_count_raw": "12"
+  },
+  {
+    "source_name": "sample-public-health",
+    "source_record_id": "sample-003",
+    "reported_date": "2026-04-09",
+    "region_label": "부산 해운대구",
+    "disease_label": "RSV",
+    "age_raw": "5",
+    "gender_raw": "F",
+    "case_count_raw": "10"
+  },
+  {
+    "source_name": "sample-public-health",
+    "source_record_id": "sample-004",
+    "reported_date": "2026-04-09",
+    "region_label": "수원시 영통구",
+    "disease_label": "Unknown Virus",
+    "age_raw": "9",
+    "gender_raw": "M",
+    "case_count_raw": "8"
+  },
+  {
+    "source_name": "sample-public-health",
+    "source_record_id": "sample-005",
+    "reported_date": "2026-04-09",
+    "region_label": "성남시 분당구",
+    "disease_label": "Adeno",
+    "age_raw": "15",
+    "gender_raw": "M",
+    "case_count_raw": "4"
+  }
+]

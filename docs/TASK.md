@@ -35,6 +35,11 @@
 - `SCHEMA.md` 작성
 - `INGESTION.md` 작성
 - `SNAPSHOTS.md` 작성
+- `FORECAST-PIPELINE.md` 작성
+- `SOURCE-MAPPINGS.md` 작성
+- `OPERATIONS.md` 작성
+- mock ingestion runner scaffold 추가
+- sample source adapter / normalization / quarantine 분리 구현
 
 ### 프론트엔드 초기 구현
 
@@ -80,12 +85,13 @@
 - 지역/질병/연령 선택에 따라 mock API 결과가 바뀌는 상태
 - mock/real API 전환 지점이 정리된 상태
 - 요약 카드, 상세 패널, 지도 레이어가 선택 상태와 연결된 상태
+- 샘플 source fixture를 처리하는 mock ingestion runner가 동작하는 상태
 
 아직 아래는 placeholder 또는 mock 기반입니다.
 
 - 실제 백엔드 API 연결
 - 실제 질병 데이터 수집/가공 파이프라인
-- ingestion runner와 source adapter 구현
+- 실제 source adapter 구현
 - 비교 기능의 지도 연동 확장
 
 ## 다음 우선순위 작업
@@ -107,7 +113,11 @@
 - `DATA-PIPELINE.md` 기준으로 세부 구현 문서 분해
 - `INGESTION.md` 기준으로 수집/정규화 배치 순서 구체화
 - `SNAPSHOTS.md` 기준으로 publish gate와 rollback 규칙 구체화
+- `FORECAST-PIPELINE.md` 기준으로 forecast input / validation / snapshot 연결 규칙 구체화
+- `SOURCE-MAPPINGS.md` 기준으로 region / disease alias와 review 규칙 구체화
+- `OPERATIONS.md` 기준으로 일일 운영, health check, 재처리, rollback 기준 구체화
 - 실제 관측 데이터 소스 최종 선정
+- 실제 source adapter 추가
 - snapshot 발행 규칙과 failure handling 구체화
 
 ### 4. 비교 기능 확장
@@ -144,4 +154,4 @@
 - 실제 API 연결 전까지는 mock 계층과 adapter 계층을 유지해 UI 구조를 고정한다.
 - 지도는 계속 핵심 인터페이스로 유지하고, 상세 화면은 보조 레이어로 발전시킨다.
 - 새 작업은 가능하면 `docs/API.md`, `docs/APP-ARCHITECTURE.md`, `docs/FEATURES.md`와 정합성을 유지한다.
-- 데이터 파이프라인 작업은 `docs/DATA-PIPELINE.md`, `docs/SCHEMA.md`, `docs/INGESTION.md`, `docs/SNAPSHOTS.md`를 함께 기준으로 삼는다.
+- 데이터 파이프라인 작업은 `docs/DATA-PIPELINE.md`, `docs/SCHEMA.md`, `docs/INGESTION.md`, `docs/SNAPSHOTS.md`, `docs/FORECAST-PIPELINE.md`, `docs/SOURCE-MAPPINGS.md`, `docs/OPERATIONS.md`를 함께 기준으로 삼는다.

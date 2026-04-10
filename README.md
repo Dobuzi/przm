@@ -47,6 +47,9 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 - [`docs/SCHEMA.md`](./docs/SCHEMA.md): 실제 저장 단위 기준의 스키마 초안
 - [`docs/INGESTION.md`](./docs/INGESTION.md): 원천 수집, 정규화, 매핑, quarantine, normalized 적재 흐름
 - [`docs/SNAPSHOTS.md`](./docs/SNAPSHOTS.md): draft, published, superseded, failed 기준의 snapshot 발행 규칙
+- [`docs/FORECAST-PIPELINE.md`](./docs/FORECAST-PIPELINE.md): forecast 입력, 생성, validation, snapshot 연결 흐름
+- [`docs/SOURCE-MAPPINGS.md`](./docs/SOURCE-MAPPINGS.md): 원천 지역명/질병명 alias, confidence, review, quarantine 규칙
+- [`docs/OPERATIONS.md`](./docs/OPERATIONS.md): 일일 배치 운영, health check, 재처리, rollback 기준
 - [`docs/PREDICTION.md`](./docs/PREDICTION.md): 예측 기능 구조와 사용자 노출 방식
 
 ### Implementation Docs
@@ -60,7 +63,7 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 
 ## Current Status
 
-현재는 제품 정의 문서, 지도 중심 MVP UI, mock/real 전환 가능한 API client 계층이 정리된 상태입니다. 테스트와 production build 검증까지 완료했습니다.
+현재는 제품 정의 문서, 지도 중심 MVP UI, mock/real 전환 가능한 API client 계층, 그리고 mock ingestion runner scaffold가 정리된 상태입니다. 테스트와 production build 검증까지 완료했습니다.
 
 ## Local Setup
 
@@ -68,14 +71,17 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 npm install
 cp .env.example .env.local
 npm run dev
+npm run ingest:mock
 ```
 
 기본값은 `mock` API 모드입니다. `VITE_MAPBOX_TOKEN`을 설정하면 실제 Mapbox 지도가 렌더링됩니다. `VITE_API_MODE=real`과 `VITE_API_BASE_URL`을 설정하면 실제 HTTP API를 호출할 수 있습니다.
+
+`npm run ingest:mock`은 샘플 source fixture를 읽어 `tmp/ingestion/mock-ingestion-output.json`에 normalized / quarantined 결과와 summary를 생성합니다.
 
 자세한 로컬 개발 방법은 [`docs/LOCAL-DEVELOPMENT.md`](./docs/LOCAL-DEVELOPMENT.md) 에 정리되어 있습니다.
 
 다음으로 자연스러운 작업은 아래 중 하나입니다.
 
 1. 실제 `real` API 서버와 연결 검증
-2. `FORECAST-PIPELINE.md` 또는 `SOURCE-MAPPINGS.md` 같은 파이프라인 세부 문서 작성
-3. 비교 기능의 지도 연동 확장
+2. 비교 기능의 지도 연동 확장
+3. 실제 source adapter 추가와 ingestion runner 확장

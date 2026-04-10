@@ -1,0 +1,178 @@
+{
+  "rawRecords": [
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-001",
+      "sourcePayload": {
+        "source_name": "sample-public-health",
+        "source_record_id": "sample-001",
+        "reported_date": "2026-04-09",
+        "region_label": "성남시 분당구",
+        "disease_label": "Flu A",
+        "age_raw": "7",
+        "gender_raw": "M",
+        "case_count_raw": "22"
+      },
+      "reportedDate": "2026-04-09",
+      "regionLabel": "성남시 분당구",
+      "diseaseLabel": "Flu A",
+      "ageRaw": "7",
+      "genderRaw": "M",
+      "caseCountRaw": "22"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-002",
+      "sourcePayload": {
+        "source_name": "sample-public-health",
+        "source_record_id": "sample-002",
+        "reported_date": "2026-04-09",
+        "region_label": "서울 강서구",
+        "disease_label": "respiratory syncytial virus",
+        "age_raw": "5세",
+        "gender_raw": "F",
+        "case_count_raw": "12"
+      },
+      "reportedDate": "2026-04-09",
+      "regionLabel": "서울 강서구",
+      "diseaseLabel": "respiratory syncytial virus",
+      "ageRaw": "5세",
+      "genderRaw": "F",
+      "caseCountRaw": "12"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-003",
+      "sourcePayload": {
+        "source_name": "sample-public-health",
+        "source_record_id": "sample-003",
+        "reported_date": "2026-04-09",
+        "region_label": "부산 해운대구",
+        "disease_label": "RSV",
+        "age_raw": "5",
+        "gender_raw": "F",
+        "case_count_raw": "10"
+      },
+      "reportedDate": "2026-04-09",
+      "regionLabel": "부산 해운대구",
+      "diseaseLabel": "RSV",
+      "ageRaw": "5",
+      "genderRaw": "F",
+      "caseCountRaw": "10"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-004",
+      "sourcePayload": {
+        "source_name": "sample-public-health",
+        "source_record_id": "sample-004",
+        "reported_date": "2026-04-09",
+        "region_label": "수원시 영통구",
+        "disease_label": "Unknown Virus",
+        "age_raw": "9",
+        "gender_raw": "M",
+        "case_count_raw": "8"
+      },
+      "reportedDate": "2026-04-09",
+      "regionLabel": "수원시 영통구",
+      "diseaseLabel": "Unknown Virus",
+      "ageRaw": "9",
+      "genderRaw": "M",
+      "caseCountRaw": "8"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-005",
+      "sourcePayload": {
+        "source_name": "sample-public-health",
+        "source_record_id": "sample-005",
+        "reported_date": "2026-04-09",
+        "region_label": "성남시 분당구",
+        "disease_label": "Adeno",
+        "age_raw": "15",
+        "gender_raw": "M",
+        "case_count_raw": "4"
+      },
+      "reportedDate": "2026-04-09",
+      "regionLabel": "성남시 분당구",
+      "diseaseLabel": "Adeno",
+      "ageRaw": "15",
+      "genderRaw": "M",
+      "caseCountRaw": "4"
+    }
+  ],
+  "normalizedRecords": [
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-001",
+      "date": "2026-04-09",
+      "regionId": "31023",
+      "diseaseId": "flu-a",
+      "age": 7,
+      "gender": "male",
+      "caseCount": 22,
+      "isQuarantined": false,
+      "quarantineReason": null
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-002",
+      "date": "2026-04-09",
+      "regionId": "11160",
+      "diseaseId": "rsv",
+      "age": 5,
+      "gender": "female",
+      "caseCount": 12,
+      "isQuarantined": false,
+      "quarantineReason": null
+    }
+  ],
+  "quarantinedRecords": [
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-003",
+      "date": "2026-04-09",
+      "regionId": null,
+      "diseaseId": "rsv",
+      "age": 5,
+      "gender": "female",
+      "caseCount": 10,
+      "isQuarantined": true,
+      "quarantineReason": "unsupported_region"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-004",
+      "date": "2026-04-09",
+      "regionId": "31014",
+      "diseaseId": null,
+      "age": 9,
+      "gender": "male",
+      "caseCount": 8,
+      "isQuarantined": true,
+      "quarantineReason": "unknown_disease"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-005",
+      "date": "2026-04-09",
+      "regionId": "31023",
+      "diseaseId": "adeno",
+      "age": 15,
+      "gender": "male",
+      "caseCount": 4,
+      "isQuarantined": true,
+      "quarantineReason": "unsupported_age"
+    }
+  ],
+  "summary": {
+    "rawCount": 5,
+    "normalizedCount": 2,
+    "quarantineCount": 3,
+    "quarantineByReason": {
+      "unsupported_region": 1,
+      "unknown_disease": 1,
+      "unsupported_age": 1
+    }
+  }
+}

@@ -1,8 +1,9 @@
 import type { GeoJSONSource, Map } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { observations, regions } from "@/shared/constants/mockData";
+import { diseases, observations, regions } from "@/shared/constants/mockData";
 import { normalizeObservation } from "@/shared/api/adapters";
+import { useComparisonStore } from "@/features/comparison/store";
 import { env } from "@/shared/config/env";
 import { useSelectionStore } from "@/features/selection-context/store";
 import {
@@ -26,6 +27,7 @@ const sourceId = "regions";
 const fillLayerId = "regions-fill";
 const lineLayerId = "regions-line";
 const selectionLayerId = "regions-selected";
+const comparisonLayerId = "regions-comparison";
 const focusLayerId = "regions-focus";
 const hoverLayerId = "regions-hover";
 
@@ -37,6 +39,7 @@ const riskClasses = {
 
 const cardToneClasses = {
   selected: "ring-4 ring-ocean/20 border-ink/10 shadow-lg",
+  comparison: "ring-2 ring-coral/25 border-coral/35 shadow-md",
   hovered: "ring-2 ring-ocean/20 border-ocean/20 shadow-md",
   focused: "border-ocean/25 shadow-sm",
   default: "opacity-90 hover:-translate-y-0.5 hover:opacity-100",
@@ -47,12 +50,17 @@ export function MapViewport() {
   const diseaseId = useSelectionStore((state) => state.diseaseId);
   const age = useSelectionStore((state) => state.age);
   const setRegionId = useSelectionStore((state) => state.setRegionId);
+  const comparisonMode = useComparisonStore((state) => state.mode);
+  const comparisonRegionId = useComparisonStore((state) => state.regionId);
+  const comparisonDiseaseId = useComparisonStore((state) => state.diseaseId);
   const { data: observationResponse } = useObservations();
   const mapRef = useRef<Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [regionFeatures, setRegionFeatures] = useState<RegionFeature[]>([]);
   const [hoveredRegionId, setHoveredRegionId] = useState<string | null>(null);
-  const legendItems = buildLegendItems();
+  const hasComparisonRegion =
+    comparisonMode === "region" && comparisonRegionId.length > 0;
+  const legendItems = buildLegendItems(hasComparisonRegion);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,8 +91,17 @@ export function MapViewport() {
         diseaseId,
         age,
         selectedRegionId: regionId,
+        comparisonRegionId: hasComparisonRegion ? comparisonRegionId : undefined,
       }),
-    [age, diseaseId, observationResponse?.items, regionFeatures, regionId],
+    [
+      age,
+      comparisonRegionId,
+      diseaseId,
+      hasComparisonRegion,
+      observationResponse?.items,
+      regionFeatures,
+      regionId,
+    ],
   );
 
   useEffect(() => {
@@ -170,6 +187,19 @@ export function MapViewport() {
           paint: {
             "line-color": "#0f172a",
             "line-width": 4,
+          },
+        });
+
+        map.addLayer({
+          id: comparisonLayerId,
+          type: "line",
+          source: sourceId,
+          filter: ["==", ["get", "isComparison"], true],
+          paint: {
+            "line-color": "#ee6c4d",
+            "line-width": 3,
+            "line-opacity": 0.85,
+            "line-dasharray": [2, 1.5],
           },
         });
 
@@ -268,6 +298,16 @@ export function MapViewport() {
                 ? "실제 서울/경기 시군구 경계 위에 위험도 색상과 선택 상태를 표시하는 첫 MVP 지도입니다."
                 : "Mapbox 토큰이 없어 fallback 상태로 보입니다. 프로젝트 루트의 .env.local 에 VITE_MAPBOX_TOKEN 을 설정하면 실제 지도가 렌더링됩니다."}
             </p>
+            {comparisonMode === "region" && comparisonRegionId ? (
+              <div className="mt-3 inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-coral shadow-sm">
+                비교 지역: {regions.find((item) => item.id === comparisonRegionId)?.name ?? "선택됨"}
+              </div>
+            ) : null}
+            {comparisonMode === "disease" && comparisonDiseaseId ? (
+              <div className="mt-3 inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-ocean shadow-sm">
+                질병 비교: {diseases.find((item) => item.id === comparisonDiseaseId)?.name ?? "선택됨"}
+              </div>
+            ) : null}
           </div>
           <Card className="hidden max-w-xs bg-white/80 lg:block">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ocean/70">
@@ -283,6 +323,7 @@ export function MapViewport() {
                       item.key === "medium" && "bg-riskMedium",
                       item.key === "high" && "bg-riskHigh",
                       item.key === "selected" && "border-2 border-ink bg-white",
+                      item.key === "comparison" && "border-2 border-coral bg-white",
                       item.key === "focused" && "border-2 border-ocean bg-white",
                     )}
                   />
@@ -305,13 +346,17 @@ export function MapViewport() {
             }
 
             const isSelected = region.id === regionId;
+            const isComparison =
+              comparisonMode === "region" && region.id === comparisonRegionId;
             const isHovered = region.id === hoveredRegionId;
             const isFocused =
               sampleObservation.diseaseId === diseaseId && sampleObservation.age === age;
             const cardPresentation = buildRegionCardPresentation({
               isSelected,
+              isComparison,
               isHovered,
               isFocused,
+              comparisonMode,
             });
 
             return (
