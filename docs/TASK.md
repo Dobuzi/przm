@@ -47,12 +47,20 @@
 - `dashboard`, `observations`, `forecasts`, `regions`, `diseases` 단위 mock endpoint 함수 분리
 - API record를 도메인 타입으로 변환하는 adapter 계층 정리
 - endpoint 단위 query hook 분리 (`useRegions`, `useDiseases`, `useObservations`, `useForecasts`)
+- `observations/breakdown` mock endpoint 추가 및 상세 패널 연동
+- 예측 표현 helper 추가 및 요약 카드/상세 패널 예측 섹션 구체화
+- 지도 범례, hover 상태, 선택/포커스 상태 표현 개선
+- mock/real 전환 가능한 API client 계층 추가
+- 로컬 개발 문서 및 환경 변수 정리
 
 ### 검증 완료 항목
 
 - `mapModel` 테스트 작성 및 통과
 - `mockApi` 테스트 작성 및 통과
 - `adapters` 테스트 작성 및 통과
+- `forecastPresentation` 테스트 작성 및 통과
+- `mapPresentation` 테스트 작성 및 통과
+- `api client` 테스트 작성 및 통과
 - `npm run build` 통과
 
 ## 현재 상태
@@ -63,46 +71,41 @@
 - 메인 지도 중심 MVP 프론트엔드 scaffold가 구현된 상태
 - 실제 서울/경기 시군구 경계가 지도에 반영된 상태
 - 지역/질병/연령 선택에 따라 mock API 결과가 바뀌는 상태
+- mock/real API 전환 지점이 정리된 상태
 - 요약 카드, 상세 패널, 지도 레이어가 선택 상태와 연결된 상태
 
 아직 아래는 placeholder 또는 mock 기반입니다.
 
-- 상세 분석 내용
-- 예측 상세 표현
 - 실제 백엔드 API 연결
 - 실제 질병 데이터 수집/가공 파이프라인
+- 상세 분석 차트 시각화 고도화
+- 지역 간 비교 / 질병 간 비교
 
 ## 다음 우선순위 작업
 
-### 1. 상세 패널의 실제 데이터 흐름 강화
+### 1. 실제 API 연결 검증
 
-- `breakdown` 성격의 mock endpoint 추가
-- 연령 분포, 성별 분포, 최근 기간 추세 데이터 구조 정의
-- 상세 패널 placeholder를 실제 데이터 카드/차트로 교체
+- `VITE_API_MODE=real` 기준으로 실제 서버와 endpoint 연결 점검
+- 응답 누락, 상태 코드, 네트워크 오류 처리 확인
+- 필요 시 endpoint별 adapter 보정
 
-### 2. 예측 섹션 구체화
+### 2. 상세 분석 시각화 강화
 
-- `1주`, `1개월` 방향 예측을 더 명확한 UI로 표현
-- 신뢰도 표현 방식 정리
-- 지역/질병/연령 조합에 따른 예측 빈 상태 처리
+- 최근 추세를 더 시각적인 형태로 개선
+- 연령 분포/성별 분포 표현 보강
+- 데이터 부족 상태의 표현 품질 향상
 
-### 3. 지도 경험 개선
+### 3. 비교 기능 설계 및 구현
 
-- 지도 범례와 선택 상태 설명 강화
-- 지도 hover 상태와 선택 상태의 시각 차이 보강
-- 지도 위 요약 정보와 상세 패널 간 전환 다듬기
+- 지역 간 비교 보기
+- 질병 간 비교 보기
+- 현재 단일 선택 흐름과 충돌하지 않는 UX 정의
 
-### 4. 실제 API 연결 준비
+### 4. 실제 데이터 파이프라인 준비
 
-- `API.md` 기준으로 프론트엔드 fetch 계층 정리
-- 현재 `mockApi.ts`와 동일한 인터페이스를 실제 API 클라이언트로 교체할 수 있게 구조 고정
-- 에러 상태, 재시도, 빈 결과 처리 규칙 정리
-
-### 5. 로컬 개발 경험 정리
-
-- `README.md` 실행 가이드 보강
-- `.env.local` 설정 예시 명확화
-- 개발용 샘플 상태를 쉽게 재현할 수 있는 방식 정리
+- 실제 관측 데이터 소스 정의
+- 예측 데이터 생성 규칙 정리
+- snapshot 기준과 업데이트 주기 정의
 
 ## 후속 작업
 

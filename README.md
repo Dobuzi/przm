@@ -50,23 +50,28 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 - [`docs/APP-ARCHITECTURE.md`](./docs/APP-ARCHITECTURE.md): 라우트, 기능 모듈, 상태, 데이터 흐름 구조
 - [`docs/TECH-STACK.md`](./docs/TECH-STACK.md): 초기 프론트엔드 기술 스택과 선택 이유
 - [`docs/API.md`](./docs/API.md): 프론트엔드와 백엔드 사이의 초기 API 계약
+- [`docs/LOCAL-DEVELOPMENT.md`](./docs/LOCAL-DEVELOPMENT.md): 로컬 실행, 환경 변수, mock/real API 전환 방법
 - [`docs/TASK.md`](./docs/TASK.md): 지금까지 수행한 작업과 앞으로의 우선순위 작업 정리
 - [`docs/superpowers/plans/2026-04-05-initial-scaffold.md`](./docs/superpowers/plans/2026-04-05-initial-scaffold.md): 초기 scaffold 구현 계획
 
 ## Current Status
 
-현재는 제품 정의 문서와 초기 프론트엔드 scaffold가 정리된 상태입니다. 의존성 설치와 production build 검증까지 완료했습니다.
+현재는 제품 정의 문서, 지도 중심 MVP UI, mock/real 전환 가능한 API client 계층이 정리된 상태입니다. 테스트와 production build 검증까지 완료했습니다.
 
 ## Local Setup
 
 ```bash
+npm install
 cp .env.example .env.local
+npm run dev
 ```
 
-`VITE_MAPBOX_TOKEN`을 설정하면 메인 화면에서 실제 Mapbox 지도가 렌더링됩니다. 토큰이 없으면 fallback 상태로 동작합니다.
+기본값은 `mock` API 모드입니다. `VITE_MAPBOX_TOKEN`을 설정하면 실제 Mapbox 지도가 렌더링됩니다. `VITE_API_MODE=real`과 `VITE_API_BASE_URL`을 설정하면 실제 HTTP API를 호출할 수 있습니다.
+
+자세한 로컬 개발 방법은 [`docs/LOCAL-DEVELOPMENT.md`](./docs/LOCAL-DEVELOPMENT.md) 에 정리되어 있습니다.
 
 다음으로 자연스러운 작업은 아래 중 하나입니다.
 
-1. mock polygon을 실제 서울/경기 시군구 GeoJSON으로 교체
-2. 지도/패널 중심 MVP 화면 구현 계속 진행
-3. 분석/예측 placeholder를 실제 데이터 흐름으로 교체
+1. 실제 `real` API 서버와 연결 검증
+2. 상세 분석 차트 시각화 강화
+3. 지역 간 비교 / 질병 간 비교 기능 추가

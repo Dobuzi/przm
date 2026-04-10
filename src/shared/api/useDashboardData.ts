@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchDashboardData } from "@/shared/api/mockApi";
+import { apiClient } from "@/shared/api/client";
 import { useSelectionStore } from "@/features/selection-context/store";
 
 export function useDashboardData() {
@@ -9,7 +9,7 @@ export function useDashboardData() {
 
   return useQuery({
     queryKey: ["dashboard-data", regionId, diseaseId, age],
-    queryFn: () => fetchDashboardData({ regionId, diseaseId, age }),
+    queryFn: () => apiClient.fetchDashboardData({ regionId, diseaseId, age }),
     staleTime: 30_000,
   });
 }

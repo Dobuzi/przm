@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchDiseases } from "@/shared/api/mockApi";
+import { apiClient } from "@/shared/api/client";
 
 export function useDiseases() {
   return useQuery({
     queryKey: ["diseases"],
-    queryFn: fetchDiseases,
+    queryFn: () => apiClient.fetchDiseases(),
     staleTime: Infinity,
   });
 }
-

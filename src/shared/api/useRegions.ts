@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchRegions } from "@/shared/api/mockApi";
+import { apiClient } from "@/shared/api/client";
 
 export function useRegions() {
   return useQuery({
     queryKey: ["regions"],
-    queryFn: fetchRegions,
+    queryFn: () => apiClient.fetchRegions(),
     staleTime: Infinity,
   });
 }
-

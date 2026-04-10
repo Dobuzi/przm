@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSelectionStore } from "@/features/selection-context/store";
-import { fetchForecasts } from "@/shared/api/mockApi";
+import { apiClient } from "@/shared/api/client";
 
 export function useForecasts() {
   const regionId = useSelectionStore((state) => state.regionId);
@@ -9,8 +9,7 @@ export function useForecasts() {
 
   return useQuery({
     queryKey: ["forecasts", regionId, diseaseId, age],
-    queryFn: () => fetchForecasts({ regionId, diseaseId, age }),
+    queryFn: () => apiClient.fetchForecasts({ regionId, diseaseId, age }),
     staleTime: 30_000,
   });
 }
-
