@@ -13,6 +13,7 @@ npm install
 cp .env.example .env.local
 npm run dev
 npm run ingest:mock
+npm run analytics:mock
 ```
 
 ## 환경 변수
@@ -136,11 +137,42 @@ tmp/ingestion/mock-ingestion-output.json
 - normalized `2`
 - quarantined `3`
 
+## Mock analytics 실행
+
+ingestion 결과를 바탕으로 snapshot candidate와 serving용 초안 데이터를 만들려면 아래 명령을 사용한다.
+
+```bash
+npm run analytics:mock
+```
+
+이 명령은 아래 파일을 생성한다.
+
+```text
+tmp/analytics/mock-snapshot-candidate.json
+```
+
+출력에는 아래가 포함된다.
+
+- `snapshot`
+- `observations`
+- `forecasts`
+- `breakdowns`
+- `summary`
+
+현재 샘플 fixture 기준 예상 summary는 아래다.
+
+- snapshot `draft-2026-04-09`
+- observation `2`
+- forecast `2`
+- breakdown `2`
+
 ## 검증 명령
 
 ```bash
 npm run test -- src/shared/api/client.test.ts src/shared/api/mockApi.test.ts src/shared/api/adapters.test.ts src/shared/lib/forecastPresentation.test.ts src/features/map/lib/mapPresentation.test.ts src/features/map/lib/mapModel.test.ts
-npm run test -- scripts/ingestion/lib/pipeline.test.mjs
+npm run test -- scripts/ingestion/lib/pipeline.test.mjs scripts/ingestion/lib/sourceAdapters.test.mjs scripts/analytics/lib/snapshotCandidate.test.mjs
+npm run ingest:mock
+npm run analytics:mock
 npm run build
 ```
 
@@ -148,4 +180,4 @@ npm run build
 
 - `real` 모드용 API는 아직 실제 서버와 연결 검증을 완료한 상태는 아니다.
 - 인증, 에러 코드 세분화, 재시도 전략은 이후 API 연결 단계에서 더 구체화해야 한다.
-- mock 데이터는 현재 서울/경기 일부 샘플 조합 중심이다.
+- mock 데이터는 현재 서울/경기 일부 샘플 조합 중심이며, 일부 observation / forecast / breakdown은 pipeline-derived snapshot candidate를 우선 사용한다.

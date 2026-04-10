@@ -24,6 +24,12 @@ interface DashboardFilters {
   age?: number;
 }
 
+const syntheticCurrentCasesByRisk = {
+  high: 22,
+  medium: 12,
+  low: 8,
+} as const;
+
 function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -128,6 +134,141 @@ function buildForecastItems(): ForecastRecord[] {
   return [...derivedItems, ...fallbackItems];
 }
 
+function buildBreakdownItem(filters: DashboardFilters) {
+  const derivedItem = mockSnapshotCandidate.breakdowns.find((item) =>
+    matchesFilters(
+      {
+        regionId: item.region_id,
+        diseaseId: item.disease_id,
+        age: item.age,
+      },
+      filters,
+    ),
+  );
+
+  if (derivedItem) {
+    return {
+      summary: derivedItem.summary,
+      recent_trend: derivedItem.recent_trend.map((point) => ({
+        week_label: point.week_label,
+        risk_level: point.risk_level,
+        cases: point.cases,
+      })),
+      age_distribution: [...derivedItem.age_distribution]
+        .sort((left, right) => {
+          if (typeof filters.age !== "number") {
+            return left.age - right.age;
+          }
+
+          if (left.age === filters.age) {
+            return -1;
+          }
+
+          if (right.age === filters.age) {
+            return 1;
+          }
+
+          return left.age - right.age;
+        })
+        .map((point) => ({
+          age: point.age,
+          cases: point.cases,
+        })),
+      gender_distribution: derivedItem.gender_distribution.map((point) => ({
+        gender: point.gender,
+        cases: point.cases,
+      })),
+    };
+  }
+
+  return null;
+}
+
+function sortAgeDistribution(
+  ageDistribution: ObservationBreakdownResponse["age_distribution"],
+  selectedAge?: number,
+) {
+  return [...ageDistribution].sort((left, right) => {
+    if (typeof selectedAge !== "number") {
+      return left.age - right.age;
+    }
+
+    if (left.age === selectedAge) {
+      return -1;
+    }
+
+    if (right.age === selectedAge) {
+      return 1;
+    }
+
+    return left.age - right.age;
+  });
+}
+
+function buildSyntheticRecentTrend(item: ObservationRecord) {
+  const currentCases = syntheticCurrentCasesByRisk[item.risk_level];
+
+  if (item.risk_level === "high") {
+    return [
+      { week_label: "4주 전", risk_level: "low", cases: currentCases - 6 },
+      { week_label: "3주 전", risk_level: "medium", cases: currentCases - 5 },
+      { week_label: "2주 전", risk_level: "medium", cases: currentCases - 4 },
+      { week_label: "이번 주", risk_level: "high", cases: currentCases },
+    ] satisfies ObservationBreakdownResponse["recent_trend"];
+  }
+
+  if (item.risk_level === "medium") {
+    return [
+      { week_label: "4주 전", risk_level: "low", cases: currentCases - 4 },
+      { week_label: "3주 전", risk_level: "medium", cases: currentCases - 2 },
+      { week_label: "2주 전", risk_level: "medium", cases: currentCases - 1 },
+      { week_label: "이번 주", risk_level: "medium", cases: currentCases },
+    ] satisfies ObservationBreakdownResponse["recent_trend"];
+  }
+
+  return [
+    { week_label: "4주 전", risk_level: "medium", cases: currentCases + 6 },
+    { week_label: "3주 전", risk_level: "medium", cases: currentCases + 5 },
+    { week_label: "2주 전", risk_level: "low", cases: currentCases + 2 },
+    { week_label: "이번 주", risk_level: "low", cases: currentCases },
+  ] satisfies ObservationBreakdownResponse["recent_trend"];
+}
+
+function buildSyntheticAgeDistribution(item: ObservationRecord) {
+  const currentCases = syntheticCurrentCasesByRisk[item.risk_level];
+
+  return [
+    { age: item.age - 1, cases: Math.max(1, currentCases - 2) },
+    { age: item.age, cases: currentCases },
+    { age: item.age + 1, cases: Math.max(1, currentCases - 3) },
+  ] satisfies ObservationBreakdownResponse["age_distribution"];
+}
+
+function buildSyntheticGenderDistribution(item: ObservationRecord) {
+  const currentCases = syntheticCurrentCasesByRisk[item.risk_level];
+  const maleCases = Math.ceil(currentCases / 2);
+
+  return [
+    { gender: "male", cases: maleCases },
+    { gender: "female", cases: currentCases - maleCases },
+  ] satisfies ObservationBreakdownResponse["gender_distribution"];
+}
+
+function buildSyntheticBreakdownItem(
+  item: ObservationRecord,
+  filters: DashboardFilters,
+): ObservationBreakdownResponse {
+  return {
+    summary: item.trend_summary,
+    recent_trend: buildSyntheticRecentTrend(item),
+    age_distribution: sortAgeDistribution(
+      buildSyntheticAgeDistribution(item),
+      filters.age,
+    ),
+    gender_distribution: buildSyntheticGenderDistribution(item),
+  };
+}
+
 export async function fetchObservations(
   filters: DashboardFilters = {},
 ): Promise<ObservationsResponse> {
@@ -195,6 +336,26 @@ export async function fetchObservationBreakdown(
 ): Promise<ObservationBreakdownResponse> {
   await sleep(180);
 
+  const derivedItem = buildBreakdownItem(filters);
+  if (derivedItem) {
+    return derivedItem;
+  }
+
+  const syntheticSource = buildObservationItems().find((item) =>
+    matchesFilters(
+      {
+        regionId: item.region_id,
+        diseaseId: item.disease_id,
+        age: item.age,
+      },
+      filters,
+    ),
+  );
+
+  if (syntheticSource) {
+    return buildSyntheticBreakdownItem(syntheticSource, filters);
+  }
+
   const item = observationBreakdowns.find((entry) => matchesFilters(entry, filters));
 
   if (!item) {
@@ -213,22 +374,13 @@ export async function fetchObservationBreakdown(
       risk_level: point.riskLevel,
       cases: point.cases,
     })),
-    age_distribution: [...item.ageDistribution]
-      .sort((left, right) => {
-        if (typeof filters.age !== "number") {
-          return left.age - right.age;
-        }
-
-        if (left.age === filters.age) {
-          return -1;
-        }
-
-        if (right.age === filters.age) {
-          return 1;
-        }
-
-        return left.age - right.age;
-      })
+    age_distribution: sortAgeDistribution(
+      [...item.ageDistribution].map((point) => ({
+        age: point.age,
+        cases: point.cases,
+      })),
+      filters.age,
+    )
       .map((point) => ({
         age: point.age,
         cases: point.cases,

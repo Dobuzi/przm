@@ -40,6 +40,8 @@
 - `OPERATIONS.md` 작성
 - mock ingestion runner scaffold 추가
 - sample source adapter / normalization / quarantine 분리 구현
+- mock analytics runner scaffold 추가
+- draft snapshot candidate 생성 구현
 
 ### 프론트엔드 초기 구현
 
@@ -62,7 +64,9 @@
 - mock/real 전환 가능한 API client 계층 추가
 - 상세 패널 추세/분포 시각화 강화
 - 상세 패널 보조 비교 기능 추가 (`지역 비교`, `질병 비교`)
+- 비교 기능의 지도 연동 확장
 - 로컬 개발 문서 및 환경 변수 정리
+- mock observation / forecast / breakdown의 일부를 pipeline-derived snapshot candidate와 연결
 
 ### 검증 완료 항목
 
@@ -86,13 +90,14 @@
 - mock/real API 전환 지점이 정리된 상태
 - 요약 카드, 상세 패널, 지도 레이어가 선택 상태와 연결된 상태
 - 샘플 source fixture를 처리하는 mock ingestion runner가 동작하는 상태
+- ingestion 결과를 바탕으로 draft snapshot candidate를 만드는 mock analytics runner가 동작하는 상태
+- 일부 UI mock 응답이 pipeline-derived observation / forecast / breakdown을 사용하는 상태
 
 아직 아래는 placeholder 또는 mock 기반입니다.
 
 - 실제 백엔드 API 연결
 - 실제 질병 데이터 수집/가공 파이프라인
 - 실제 source adapter 구현
-- 비교 기능의 지도 연동 확장
 
 ## 다음 우선순위 작업
 
@@ -102,12 +107,7 @@
 - 응답 누락, 상태 코드, 네트워크 오류 처리 확인
 - 필요 시 endpoint별 adapter 보정
 
-### 2. 상세 분석 시각화 강화
-
-- 데이터 부족 상태의 표현 품질 향상
-- 필요 시 정식 차트 라이브러리 도입 여부 검토
-
-### 3. 실제 데이터 파이프라인 준비
+### 2. 실제 데이터 파이프라인 준비
 
 - `SCHEMA.md` 기준으로 저장 구조 확정
 - `DATA-PIPELINE.md` 기준으로 세부 구현 문서 분해
@@ -118,12 +118,15 @@
 - `OPERATIONS.md` 기준으로 일일 운영, health check, 재처리, rollback 기준 구체화
 - 실제 관측 데이터 소스 최종 선정
 - 실제 source adapter 추가
+- ingestion output을 analytics / serving mock 생성과 더 넓게 연결
 - snapshot 발행 규칙과 failure handling 구체화
 
-### 4. 비교 기능 확장
+### 3. 상세 분석과 비교 기능 확장
 
-- 상세 패널 비교를 지도 레이어와 더 자연스럽게 연결
+- pipeline-derived breakdown coverage 확대
 - 필요 시 연령 비교까지 확장 여부 검토
+- 데이터 부족 상태의 표현 품질 향상
+- 필요 시 정식 차트 라이브러리 도입 여부 검토
 
 ## 후속 작업
 

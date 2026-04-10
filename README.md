@@ -63,7 +63,7 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 
 ## Current Status
 
-현재는 제품 정의 문서, 지도 중심 MVP UI, mock/real 전환 가능한 API client 계층, 그리고 mock ingestion runner scaffold가 정리된 상태입니다. 테스트와 production build 검증까지 완료했습니다.
+현재는 제품 정의 문서, 지도 중심 MVP UI, mock/real 전환 가능한 API client 계층, mock ingestion runner, 그리고 draft snapshot candidate를 만드는 mock analytics runner까지 정리된 상태입니다. 테스트와 production build 검증까지 완료했습니다.
 
 ## Local Setup
 
@@ -72,16 +72,19 @@ npm install
 cp .env.example .env.local
 npm run dev
 npm run ingest:mock
+npm run analytics:mock
 ```
 
 기본값은 `mock` API 모드입니다. `VITE_MAPBOX_TOKEN`을 설정하면 실제 Mapbox 지도가 렌더링됩니다. `VITE_API_MODE=real`과 `VITE_API_BASE_URL`을 설정하면 실제 HTTP API를 호출할 수 있습니다.
 
 `npm run ingest:mock`은 샘플 source fixture를 읽어 `tmp/ingestion/mock-ingestion-output.json`에 normalized / quarantined 결과와 summary를 생성합니다.
 
+`npm run analytics:mock`은 ingestion 결과를 바탕으로 `tmp/analytics/mock-snapshot-candidate.json`에 draft snapshot candidate, observation, forecast, breakdown 결과를 생성합니다.
+
 자세한 로컬 개발 방법은 [`docs/LOCAL-DEVELOPMENT.md`](./docs/LOCAL-DEVELOPMENT.md) 에 정리되어 있습니다.
 
 다음으로 자연스러운 작업은 아래 중 하나입니다.
 
 1. 실제 `real` API 서버와 연결 검증
-2. 비교 기능의 지도 연동 확장
-3. 실제 source adapter 추가와 ingestion runner 확장
+2. 실제 source adapter 추가와 ingestion / analytics runner 확장
+3. pipeline-derived breakdown coverage 확대

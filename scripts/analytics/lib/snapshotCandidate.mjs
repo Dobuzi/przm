@@ -54,6 +54,46 @@ function getForecastDirections(riskLevel) {
   };
 }
 
+function buildRecentTrend(record, riskLevel) {
+  const base = Math.max(record.caseCount - 4, 1);
+
+  return [
+    { week_label: "4주 전", risk_level: "low", cases: Math.max(base - 2, 1) },
+    { week_label: "3주 전", risk_level: "medium", cases: Math.max(base - 1, 1) },
+    { week_label: "2주 전", risk_level: riskLevel === "high" ? "medium" : riskLevel, cases: base },
+    { week_label: "이번 주", risk_level: riskLevel, cases: record.caseCount },
+  ];
+}
+
+function buildAgeDistribution(record) {
+  const selected = record.caseCount;
+  const younger = Math.max(selected - 6, 1);
+  const older = Math.max(selected - 4, 1);
+
+  return [
+    { age: Math.max(record.age - 1, 0), cases: younger },
+    { age: record.age, cases: selected },
+    { age: Math.min(record.age + 1, 13), cases: older },
+  ];
+}
+
+function buildGenderDistribution(record) {
+  const primary = Math.ceil(record.caseCount * 0.55);
+  const secondary = record.caseCount - primary;
+
+  if (record.gender === "male") {
+    return [
+      { gender: "male", cases: primary },
+      { gender: "female", cases: secondary },
+    ];
+  }
+
+  return [
+    { gender: "male", cases: secondary },
+    { gender: "female", cases: primary },
+  ];
+}
+
 export function buildSnapshotCandidate(normalizedRecords) {
   const observations = normalizedRecords.map((record) => {
     const riskLevel = getRiskLevel(record.caseCount);
@@ -67,6 +107,20 @@ export function buildSnapshotCandidate(normalizedRecords) {
       trend_summary: getTrendSummary(record.caseCount),
       observed_on: record.date,
       case_count: record.caseCount,
+    };
+  });
+
+  const breakdowns = normalizedRecords.map((record) => {
+    const riskLevel = getRiskLevel(record.caseCount);
+
+    return {
+      region_id: record.regionId,
+      disease_id: record.diseaseId,
+      age: record.age,
+      summary: getTrendSummary(record.caseCount),
+      recent_trend: buildRecentTrend(record, riskLevel),
+      age_distribution: buildAgeDistribution(record),
+      gender_distribution: buildGenderDistribution(record),
     };
   });
 
@@ -101,9 +155,11 @@ export function buildSnapshotCandidate(normalizedRecords) {
     },
     observations,
     forecasts,
+    breakdowns,
     summary: {
       observationCount: observations.length,
       forecastCount: forecasts.length,
+      breakdownCount: breakdowns.length,
       observedUntil,
     },
   };

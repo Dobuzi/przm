@@ -74,20 +74,45 @@ describe("fetchDashboardData", () => {
       age: 7,
     });
 
-    expect(response.summary).toBe("최근 7일 확산세 증가");
+    expect(response.summary).toBe("최근 관측 기준 위험 증가 가능성이 높음");
     expect(response.recent_trend).toHaveLength(4);
     expect(response.recent_trend[0]).toEqual({
       week_label: "4주 전",
-      risk_level: "medium",
-      cases: 18,
+      risk_level: "low",
+      cases: 16,
     });
     expect(response.age_distribution[0]).toEqual({
       age: 7,
       cases: 22,
     });
     expect(response.gender_distribution).toEqual([
-      { gender: "male", cases: 12 },
-      { gender: "female", cases: 10 },
+      { gender: "male", cases: 13 },
+      { gender: "female", cases: 9 },
+    ]);
+  });
+
+  it("builds a synthetic breakdown when only observation-level data exists", async () => {
+    const response = await fetchObservationBreakdown({
+      regionId: "31014",
+      diseaseId: "adeno",
+      age: 9,
+    });
+
+    expect(response.summary).toBe("증가세 둔화");
+    expect(response.recent_trend).toEqual([
+      { week_label: "4주 전", risk_level: "medium", cases: 14 },
+      { week_label: "3주 전", risk_level: "medium", cases: 13 },
+      { week_label: "2주 전", risk_level: "low", cases: 10 },
+      { week_label: "이번 주", risk_level: "low", cases: 8 },
+    ]);
+    expect(response.age_distribution).toEqual([
+      { age: 9, cases: 8 },
+      { age: 8, cases: 6 },
+      { age: 10, cases: 5 },
+    ]);
+    expect(response.gender_distribution).toEqual([
+      { gender: "male", cases: 4 },
+      { gender: "female", cases: 4 },
     ]);
   });
 });

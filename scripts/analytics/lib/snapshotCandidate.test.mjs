@@ -40,6 +40,7 @@ describe("buildSnapshotCandidate", () => {
     });
     expect(candidate.observations).toHaveLength(2);
     expect(candidate.forecasts).toHaveLength(2);
+    expect(candidate.breakdowns).toHaveLength(2);
     expect(candidate.observations[0]).toMatchObject({
       region_id: "31023",
       disease_id: "flu-a",
@@ -54,5 +55,12 @@ describe("buildSnapshotCandidate", () => {
       month_direction: "decrease",
       confidence: "medium",
     });
+    expect(candidate.breakdowns[0]).toMatchObject({
+      region_id: "31023",
+      disease_id: "flu-a",
+      age: 7,
+      summary: "최근 관측 기준 위험 증가 가능성이 높음",
+    });
+    expect(candidate.summary.breakdownCount).toBe(2);
   });
 });
