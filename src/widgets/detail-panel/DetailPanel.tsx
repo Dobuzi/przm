@@ -11,8 +11,14 @@ import {
   buildForecastPresentation,
   buildForecastSummary,
 } from "@/shared/lib/forecastPresentation";
+import { cn } from "@/shared/lib/cn";
 import { Card } from "@/shared/ui/Card";
 import { SectionHeading } from "@/shared/ui/SectionHeading";
+import {
+  buildAgeDistributionPresentation,
+  buildGenderDistributionPresentation,
+  buildTrendPresentation,
+} from "@/widgets/detail-panel/detailPanelPresentation";
 
 const confidenceLabel = {
   low: "낮음",
@@ -28,19 +34,24 @@ const genderLabel = {
 function DistributionRow({
   label,
   value,
-  maxValue,
+  width,
+  isSelected = false,
+  suffix,
 }: {
   label: string;
   value: number;
-  maxValue: number;
+  width: string;
+  isSelected?: boolean;
+  suffix?: string;
 }) {
-  const width = maxValue > 0 ? `${Math.max((value / maxValue) * 100, 8)}%` : "0%";
-
   return (
-    <div className="space-y-1">
+    <div className={cn("space-y-1", isSelected && "rounded-2xl bg-white/70 p-2")}>
       <div className="flex items-center justify-between text-sm text-slate-600">
-        <span>{label}</span>
-        <span className="font-medium text-slate-800">{value}</span>
+        <span className={cn(isSelected && "font-semibold text-ink")}>{label}</span>
+        <span className="font-medium text-slate-800">
+          {value}
+          {suffix ? ` · ${suffix}` : ""}
+        </span>
       </div>
       <div className="h-2 rounded-full bg-slate-200">
         <div className="h-full rounded-full bg-ocean" style={{ width }} />
@@ -81,8 +92,9 @@ export function DetailPanel() {
   const trendPoints = breakdown?.recentTrend ?? [];
   const agePoints = breakdown?.ageDistribution ?? [];
   const genderPoints = breakdown?.genderDistribution ?? [];
-  const maxAgeCases = Math.max(...agePoints.map((item) => item.cases), 0);
-  const maxGenderCases = Math.max(...genderPoints.map((item) => item.cases), 0);
+  const trendPresentation = buildTrendPresentation(trendPoints);
+  const agePresentation = buildAgeDistributionPresentation(agePoints, age);
+  const genderPresentation = buildGenderDistributionPresentation(genderPoints);
 
   return (
     <Card className="h-full min-h-[420px] space-y-5 lg:max-w-[380px]">
@@ -111,23 +123,32 @@ export function DetailPanel() {
 
         <div className="rounded-2xl bg-slate-50 p-4">
           <p className="text-sm font-medium text-slate-800">최근 4주 추세</p>
-          {trendPoints.length > 0 ? (
-            <div className="mt-3 grid gap-2">
-              {trendPoints.map((point) => (
-                <div
-                  key={point.weekLabel}
-                  className="flex items-center justify-between rounded-2xl bg-white px-3 py-2 text-sm"
-                >
-                  <span className="text-slate-600">{point.weekLabel}</span>
-                  <span className="font-medium text-slate-800">
-                    {point.cases}건 · {point.riskLevel === "high"
-                      ? "높음"
-                      : point.riskLevel === "medium"
-                        ? "보통"
-                        : "낮음"}
-                  </span>
-                </div>
-              ))}
+          {trendPresentation.length > 0 ? (
+            <div className="mt-4">
+              <div className="flex h-28 items-end gap-3">
+                {trendPresentation.map((point) => (
+                  <div key={point.weekLabel} className="flex flex-1 flex-col items-center gap-2">
+                    <div className="flex h-20 w-full items-end">
+                      <div
+                        className={cn(
+                          "w-full rounded-t-2xl",
+                          point.riskLevel === "high" && "bg-riskHigh",
+                          point.riskLevel === "medium" && "bg-riskMedium",
+                          point.riskLevel === "low" && "bg-riskLow",
+                        )}
+                        style={{ height: point.barHeight }}
+                      />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-[11px] font-medium text-slate-700">{point.weekLabel}</p>
+                      <p className="text-[11px] text-slate-500">{point.cases}건</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3 text-xs leading-5 text-slate-500">
+                최근 4주 흐름을 막대 높이로 비교합니다.
+              </p>
             </div>
           ) : (
             <p className="mt-2 text-sm text-slate-600">최근 추세 데이터 준비 중</p>
@@ -136,14 +157,16 @@ export function DetailPanel() {
 
         <div className="rounded-2xl bg-slate-50 p-4">
           <p className="text-sm font-medium text-slate-800">연령 분포</p>
-          {agePoints.length > 0 ? (
+          {agePresentation.length > 0 ? (
             <div className="mt-3 space-y-3">
-              {agePoints.map((point) => (
+              {agePresentation.map((point) => (
                 <DistributionRow
                   key={point.age}
                   label={`${point.age}세`}
                   value={point.cases}
-                  maxValue={maxAgeCases}
+                  width={point.width}
+                  isSelected={point.isSelected}
+                  suffix={point.isSelected ? "선택 연령" : undefined}
                 />
               ))}
             </div>
@@ -154,14 +177,15 @@ export function DetailPanel() {
 
         <div className="rounded-2xl bg-slate-50 p-4">
           <p className="text-sm font-medium text-slate-800">성별 분포</p>
-          {genderPoints.length > 0 ? (
+          {genderPresentation.length > 0 ? (
             <div className="mt-3 space-y-3">
-              {genderPoints.map((point) => (
+              {genderPresentation.map((point) => (
                 <DistributionRow
                   key={point.gender}
                   label={genderLabel[point.gender]}
                   value={point.cases}
-                  maxValue={maxGenderCases}
+                  width={point.ratioLabel}
+                  suffix={point.ratioLabel}
                 />
               ))}
             </div>
