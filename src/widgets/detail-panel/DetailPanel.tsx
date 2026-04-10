@@ -3,6 +3,7 @@ import {
   normalizeForecast,
   normalizeObservation,
 } from "@/shared/api/adapters";
+import { useComparisonStore } from "@/features/comparison/store";
 import { useForecasts } from "@/shared/api/useForecasts";
 import { useObservationBreakdown } from "@/shared/api/useObservationBreakdown";
 import { useObservations } from "@/shared/api/useObservations";
@@ -14,6 +15,10 @@ import {
 import { cn } from "@/shared/lib/cn";
 import { Card } from "@/shared/ui/Card";
 import { SectionHeading } from "@/shared/ui/SectionHeading";
+import {
+  buildComparisonCardTitle,
+  buildComparisonSummary,
+} from "@/widgets/detail-panel/comparisonPresentation";
 import {
   buildAgeDistributionPresentation,
   buildGenderDistributionPresentation,
@@ -62,6 +67,14 @@ function DistributionRow({
 
 export function DetailPanel() {
   const { regionId, diseaseId, age, panelState, closePanel } = useSelectionStore();
+  const {
+    mode: comparisonMode,
+    regionId: comparisonRegionId,
+    diseaseId: comparisonDiseaseId,
+    setMode: setComparisonMode,
+    setRegionId: setComparisonRegionId,
+    setDiseaseId: setComparisonDiseaseId,
+  } = useComparisonStore();
   const { data: observationResponse } = useObservations();
   const { data: forecastResponse } = useForecasts();
   const { data: breakdown } = useObservationBreakdown();
@@ -89,12 +102,74 @@ export function DetailPanel() {
     observation?.riskLevel ?? "low",
     forecast,
   );
+  const comparisonFilters =
+    comparisonMode === "region" && comparisonRegionId
+      ? { regionId: comparisonRegionId, diseaseId, age }
+      : comparisonMode === "disease" && comparisonDiseaseId
+        ? { regionId, diseaseId: comparisonDiseaseId, age }
+        : undefined;
+  const { data: comparisonObservationResponse } = useObservations(comparisonFilters);
+  const { data: comparisonForecastResponse } = useForecasts(comparisonFilters);
+  const { data: comparisonBreakdown } = useObservationBreakdown(comparisonFilters);
+  const comparisonObservations =
+    comparisonObservationResponse?.items.map(normalizeObservation) ?? observations;
+  const comparisonForecasts =
+    comparisonForecastResponse?.items.map(normalizeForecast) ?? forecasts;
+  const comparisonObservation = comparisonFilters
+    ? comparisonObservations.find(
+        (item) =>
+          item.regionId === comparisonFilters.regionId &&
+          item.diseaseId === comparisonFilters.diseaseId &&
+          item.age === comparisonFilters.age,
+      )
+    : undefined;
+  const comparisonForecast = comparisonFilters
+    ? comparisonForecasts.find(
+        (item) =>
+          item.regionId === comparisonFilters.regionId &&
+          item.diseaseId === comparisonFilters.diseaseId &&
+          item.age === comparisonFilters.age,
+      )
+    : undefined;
+  const comparisonForecastPresentation = buildForecastPresentation(comparisonForecast);
   const trendPoints = breakdown?.recentTrend ?? [];
   const agePoints = breakdown?.ageDistribution ?? [];
   const genderPoints = breakdown?.genderDistribution ?? [];
   const trendPresentation = buildTrendPresentation(trendPoints);
   const agePresentation = buildAgeDistributionPresentation(agePoints, age);
   const genderPresentation = buildGenderDistributionPresentation(genderPoints);
+  const comparisonRegionOptions = regions.filter((item) => item.id !== regionId);
+  const comparisonDiseaseOptions = diseases.filter((item) => item.id !== diseaseId);
+  const comparisonRegion = regions.find((item) => item.id === comparisonRegionId);
+  const comparisonDisease = diseases.find((item) => item.id === comparisonDiseaseId);
+  const comparisonTitle =
+    comparisonMode === "region" && comparisonRegion
+      ? buildComparisonCardTitle({
+          mode: "region",
+          regionName: comparisonRegion.name,
+          diseaseName: disease?.name ?? "",
+        })
+      : comparisonMode === "disease" && comparisonDisease
+        ? buildComparisonCardTitle({
+            mode: "disease",
+            regionName: region?.name ?? "",
+            diseaseName: comparisonDisease.name,
+          })
+        : "";
+  const comparisonSummary =
+    comparisonMode === "region" && comparisonRegion
+      ? buildComparisonSummary({
+          mode: "region",
+          baseLabel: region?.name ?? "",
+          comparisonLabel: comparisonRegion.name,
+        })
+      : comparisonMode === "disease" && comparisonDisease
+        ? buildComparisonSummary({
+            mode: "disease",
+            baseLabel: disease?.name ?? "",
+            comparisonLabel: comparisonDisease.name,
+          })
+        : "";
 
   return (
     <Card className="h-full min-h-[420px] space-y-5 lg:max-w-[380px]">
@@ -224,6 +299,114 @@ export function DetailPanel() {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="rounded-2xl bg-slate-50 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium text-slate-800">비교 보기</p>
+            <select
+              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700"
+              value={comparisonMode}
+              onChange={(event) =>
+                setComparisonMode(event.target.value as "none" | "region" | "disease")
+              }
+            >
+              <option value="none">비교 안 함</option>
+              <option value="region">지역 비교</option>
+              <option value="disease">질병 비교</option>
+            </select>
+          </div>
+
+          {comparisonMode === "region" ? (
+            <div className="mt-3">
+              <select
+                className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                value={comparisonRegionId}
+                onChange={(event) => setComparisonRegionId(event.target.value)}
+              >
+                <option value="">비교 지역 선택</option>
+                {comparisonRegionOptions.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : comparisonMode === "disease" ? (
+            <div className="mt-3">
+              <select
+                className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                value={comparisonDiseaseId}
+                onChange={(event) => setComparisonDiseaseId(event.target.value)}
+              >
+                <option value="">비교 질병 선택</option>
+                {comparisonDiseaseOptions.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          {comparisonFilters && comparisonObservation ? (
+            <div className="mt-4 space-y-3">
+              <p className="text-sm text-slate-600">{comparisonSummary}</p>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-2xl bg-white p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ocean/70">
+                    현재 기준
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-ink">
+                    {buildComparisonCardTitle({
+                      mode: comparisonMode === "region" ? "region" : "disease",
+                      regionName: region?.name ?? "",
+                      diseaseName: disease?.name ?? "",
+                    })}
+                  </p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    위험 {observation?.riskLevel === "high"
+                      ? "높음"
+                      : observation?.riskLevel === "medium"
+                        ? "보통"
+                        : "낮음"}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {breakdown?.summary || observation?.trendSummary || "데이터 준비 중"}
+                  </p>
+                  <p className="mt-3 text-xs text-slate-500">
+                    1주 {forecastPresentation.week.label} / 1달 {forecastPresentation.month.label}
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-white p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ocean/70">
+                    비교 기준
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-ink">{comparisonTitle}</p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    위험 {comparisonObservation.riskLevel === "high"
+                      ? "높음"
+                      : comparisonObservation.riskLevel === "medium"
+                        ? "보통"
+                        : "낮음"}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {comparisonBreakdown?.summary ||
+                      comparisonObservation.trendSummary ||
+                      "데이터 준비 중"}
+                  </p>
+                  <p className="mt-3 text-xs text-slate-500">
+                    1주 {comparisonForecastPresentation.week.label} / 1달{" "}
+                    {comparisonForecastPresentation.month.label}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : comparisonMode !== "none" ? (
+            <p className="mt-4 text-sm text-slate-600">
+              비교 대상을 선택하면 현재 기준과 나란히 비교할 수 있습니다.
+            </p>
+          ) : null}
         </div>
       </div>
     </Card>

@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { normalizeObservationBreakdown } from "@/shared/api/adapters";
-import { apiClient } from "@/shared/api/client";
+import { apiClient, type DashboardFilters } from "@/shared/api/client";
 import { useSelectionStore } from "@/features/selection-context/store";
 
-export function useObservationBreakdown() {
-  const regionId = useSelectionStore((state) => state.regionId);
-  const diseaseId = useSelectionStore((state) => state.diseaseId);
-  const age = useSelectionStore((state) => state.age);
+export function useObservationBreakdown(filtersOverride?: DashboardFilters) {
+  const selectedRegionId = useSelectionStore((state) => state.regionId);
+  const selectedDiseaseId = useSelectionStore((state) => state.diseaseId);
+  const selectedAge = useSelectionStore((state) => state.age);
+  const regionId = filtersOverride?.regionId ?? selectedRegionId;
+  const diseaseId = filtersOverride?.diseaseId ?? selectedDiseaseId;
+  const age = filtersOverride?.age ?? selectedAge;
 
   return useQuery({
     queryKey: ["observation-breakdown", regionId, diseaseId, age],

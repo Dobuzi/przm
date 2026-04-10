@@ -27,13 +27,29 @@ export const observations: Observation[] = [
   {
     id: "obs-2",
     regionId: "11160",
+    diseaseId: "flu-a",
+    age: 7,
+    riskLevel: "medium",
+    trendSummary: "최근 7일 완만한 증가",
+  },
+  {
+    id: "obs-3",
+    regionId: "31023",
+    diseaseId: "rsv",
+    age: 7,
+    riskLevel: "medium",
+    trendSummary: "이번 주 위험도 유지",
+  },
+  {
+    id: "obs-4",
+    regionId: "11160",
     diseaseId: "rsv",
     age: 5,
     riskLevel: "medium",
     trendSummary: "이번 주 위험도 유지",
   },
   {
-    id: "obs-3",
+    id: "obs-5",
     regionId: "31014",
     diseaseId: "adeno",
     age: 9,
@@ -51,6 +67,24 @@ export const forecasts: Forecast[] = [
     weekDirection: "increase",
     monthDirection: "steady",
     confidence: "medium",
+  },
+  {
+    id: "fc-2",
+    regionId: "11160",
+    diseaseId: "flu-a",
+    age: 7,
+    weekDirection: "steady",
+    monthDirection: "decrease",
+    confidence: "medium",
+  },
+  {
+    id: "fc-3",
+    regionId: "31023",
+    diseaseId: "rsv",
+    age: 7,
+    weekDirection: "steady",
+    monthDirection: "steady",
+    confidence: "low",
   },
 ];
 
@@ -81,6 +115,50 @@ export const observationBreakdowns: Array<
     genderDistribution: [
       { gender: "male", cases: 12 },
       { gender: "female", cases: 10 },
+    ],
+  },
+  {
+    regionId: "11160",
+    diseaseId: "flu-a",
+    age: 7,
+    summary: "최근 7일 완만한 증가",
+    recentTrend: [
+      { weekLabel: "4주 전", riskLevel: "low", cases: 9 },
+      { weekLabel: "3주 전", riskLevel: "medium", cases: 11 },
+      { weekLabel: "2주 전", riskLevel: "medium", cases: 12 },
+      { weekLabel: "이번 주", riskLevel: "medium", cases: 13 },
+    ],
+    ageDistribution: [
+      { age: 5, cases: 7 },
+      { age: 6, cases: 10 },
+      { age: 7, cases: 13 },
+      { age: 8, cases: 9 },
+    ],
+    genderDistribution: [
+      { gender: "male", cases: 7 },
+      { gender: "female", cases: 6 },
+    ],
+  },
+  {
+    regionId: "31023",
+    diseaseId: "rsv",
+    age: 7,
+    summary: "이번 주 위험도 유지",
+    recentTrend: [
+      { weekLabel: "4주 전", riskLevel: "medium", cases: 10 },
+      { weekLabel: "3주 전", riskLevel: "medium", cases: 10 },
+      { weekLabel: "2주 전", riskLevel: "medium", cases: 11 },
+      { weekLabel: "이번 주", riskLevel: "medium", cases: 11 },
+    ],
+    ageDistribution: [
+      { age: 5, cases: 8 },
+      { age: 6, cases: 10 },
+      { age: 7, cases: 11 },
+      { age: 8, cases: 8 },
+    ],
+    genderDistribution: [
+      { gender: "male", cases: 6 },
+      { gender: "female", cases: 5 },
     ],
   },
   {

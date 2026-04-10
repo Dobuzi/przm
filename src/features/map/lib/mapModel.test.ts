@@ -19,15 +19,16 @@ describe("buildRegionMapData", () => {
     const selected = mapData.features.find(
       (feature) => feature.properties.regionId === "31023",
     );
-    const neutral = mapData.features.find(
+    const comparisonRegion = mapData.features.find(
       (feature) => feature.properties.regionId === "11160",
     );
 
     expect(selected?.properties.isSelected).toBe(true);
     expect(selected?.properties.riskLevel).toBe("high");
     expect(selected?.properties.diseaseFocus).toBe(true);
-    expect(neutral?.properties.isSelected).toBe(false);
-    expect(neutral?.properties.diseaseFocus).toBe(false);
+    expect(comparisonRegion?.properties.isSelected).toBe(false);
+    expect(comparisonRegion?.properties.riskLevel).toBe("medium");
+    expect(comparisonRegion?.properties.diseaseFocus).toBe(true);
   });
 
   it("returns a focused viewport for the selected region", () => {
