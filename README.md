@@ -46,6 +46,7 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 - [`docs/DATA-PIPELINE.md`](./docs/DATA-PIPELINE.md): 실제 데이터 수집, 집계, snapshot, API 발행 흐름
 - [`docs/SCHEMA.md`](./docs/SCHEMA.md): 실제 저장 단위 기준의 스키마 초안
 - [`docs/INGESTION.md`](./docs/INGESTION.md): 원천 수집, 정규화, 매핑, quarantine, normalized 적재 흐름
+- [`docs/SNAPSHOTS.md`](./docs/SNAPSHOTS.md): draft, published, superseded, failed 기준의 snapshot 발행 규칙
 - [`docs/PREDICTION.md`](./docs/PREDICTION.md): 예측 기능 구조와 사용자 노출 방식
 
 ### Implementation Docs
@@ -76,5 +77,5 @@ npm run dev
 다음으로 자연스러운 작업은 아래 중 하나입니다.
 
 1. 실제 `real` API 서버와 연결 검증
-2. `SNAPSHOTS.md` 또는 `FORECAST-PIPELINE.md` 같은 파이프라인 세부 문서 작성
+2. `FORECAST-PIPELINE.md` 또는 `SOURCE-MAPPINGS.md` 같은 파이프라인 세부 문서 작성
 3. 비교 기능의 지도 연동 확장

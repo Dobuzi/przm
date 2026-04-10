@@ -34,6 +34,7 @@
 - `DATA-PIPELINE.md` 작성
 - `SCHEMA.md` 작성
 - `INGESTION.md` 작성
+- `SNAPSHOTS.md` 작성
 
 ### 프론트엔드 초기 구현
 
@@ -105,6 +106,7 @@
 - `SCHEMA.md` 기준으로 저장 구조 확정
 - `DATA-PIPELINE.md` 기준으로 세부 구현 문서 분해
 - `INGESTION.md` 기준으로 수집/정규화 배치 순서 구체화
+- `SNAPSHOTS.md` 기준으로 publish gate와 rollback 규칙 구체화
 - 실제 관측 데이터 소스 최종 선정
 - snapshot 발행 규칙과 failure handling 구체화
 
@@ -142,4 +144,4 @@
 - 실제 API 연결 전까지는 mock 계층과 adapter 계층을 유지해 UI 구조를 고정한다.
 - 지도는 계속 핵심 인터페이스로 유지하고, 상세 화면은 보조 레이어로 발전시킨다.
 - 새 작업은 가능하면 `docs/API.md`, `docs/APP-ARCHITECTURE.md`, `docs/FEATURES.md`와 정합성을 유지한다.
-- 데이터 파이프라인 작업은 `docs/DATA-PIPELINE.md`, `docs/SCHEMA.md`, `docs/INGESTION.md`를 함께 기준으로 삼는다.
+- 데이터 파이프라인 작업은 `docs/DATA-PIPELINE.md`, `docs/SCHEMA.md`, `docs/INGESTION.md`, `docs/SNAPSHOTS.md`를 함께 기준으로 삼는다.
