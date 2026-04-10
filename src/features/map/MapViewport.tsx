@@ -13,6 +13,10 @@ import {
   buildRegionMapData,
   getRegionViewport,
 } from "@/features/map/lib/mapModel";
+import {
+  buildLegendItems,
+  buildRegionCardPresentation,
+} from "@/features/map/lib/mapPresentation";
 import { riskFillColors } from "@/features/map/lib/riskColors";
 import { useObservations } from "@/shared/api/useObservations";
 import { Card } from "@/shared/ui/Card";
@@ -23,11 +27,19 @@ const fillLayerId = "regions-fill";
 const lineLayerId = "regions-line";
 const selectionLayerId = "regions-selected";
 const focusLayerId = "regions-focus";
+const hoverLayerId = "regions-hover";
 
 const riskClasses = {
   low: "bg-riskLow",
   medium: "bg-riskMedium",
   high: "bg-riskHigh text-white",
+};
+
+const cardToneClasses = {
+  selected: "ring-4 ring-ocean/20 border-ink/10 shadow-lg",
+  hovered: "ring-2 ring-ocean/20 border-ocean/20 shadow-md",
+  focused: "border-ocean/25 shadow-sm",
+  default: "opacity-90 hover:-translate-y-0.5 hover:opacity-100",
 };
 
 export function MapViewport() {
@@ -39,6 +51,8 @@ export function MapViewport() {
   const mapRef = useRef<Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const [regionFeatures, setRegionFeatures] = useState<RegionFeature[]>([]);
+  const [hoveredRegionId, setHoveredRegionId] = useState<string | null>(null);
+  const legendItems = buildLegendItems();
 
   useEffect(() => {
     let cancelled = false;
@@ -159,6 +173,18 @@ export function MapViewport() {
           },
         });
 
+        map.addLayer({
+          id: hoverLayerId,
+          type: "line",
+          source: sourceId,
+          filter: ["==", ["get", "regionId"], ""],
+          paint: {
+            "line-color": "#0f4c81",
+            "line-width": 3,
+            "line-opacity": 0.85,
+          },
+        });
+
         map.on("click", fillLayerId, (event) => {
           const clickedFeature = event.features?.[0];
           const clickedRegionId = clickedFeature?.properties?.regionId;
@@ -167,12 +193,19 @@ export function MapViewport() {
           }
         });
 
+        map.on("mousemove", fillLayerId, (event) => {
+          const hoveredFeature = event.features?.[0];
+          const nextHoveredRegionId = hoveredFeature?.properties?.regionId;
+          setHoveredRegionId(typeof nextHoveredRegionId === "string" ? nextHoveredRegionId : null);
+        });
+
         map.on("mouseenter", fillLayerId, () => {
           map.getCanvas().style.cursor = "pointer";
         });
 
         map.on("mouseleave", fillLayerId, () => {
           map.getCanvas().style.cursor = "";
+          setHoveredRegionId(null);
         });
       });
     };
@@ -190,6 +223,15 @@ export function MapViewport() {
     const source = mapRef.current?.getSource(sourceId) as GeoJSONSource | undefined;
     source?.setData(mapData);
   }, [mapData]);
+
+  useEffect(() => {
+    if (!mapRef.current) {
+      return;
+    }
+
+    const hoveredId = hoveredRegionId ?? "";
+    mapRef.current.setFilter(hoverLayerId, ["==", ["get", "regionId"], hoveredId]);
+  }, [hoveredRegionId]);
 
   useEffect(() => {
     const viewport = getRegionViewport(regionFeatures, regionId);
@@ -231,19 +273,25 @@ export function MapViewport() {
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ocean/70">
               위험도 범례
             </p>
-            <div className="mt-3 space-y-2 text-sm text-slate-700">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-riskLow" />
-                낮음
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-riskMedium" />
-                보통
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-riskHigh" />
-                높음
-              </div>
+            <div className="mt-3 space-y-3 text-sm text-slate-700">
+              {legendItems.map((item) => (
+                <div key={item.key} className="flex items-start gap-2">
+                  <span
+                    className={cn(
+                      "mt-1 h-3 w-3 rounded-full",
+                      item.key === "low" && "bg-riskLow",
+                      item.key === "medium" && "bg-riskMedium",
+                      item.key === "high" && "bg-riskHigh",
+                      item.key === "selected" && "border-2 border-ink bg-white",
+                      item.key === "focused" && "border-2 border-ocean bg-white",
+                    )}
+                  />
+                  <div>
+                    <p className="font-medium text-slate-800">{item.label}</p>
+                    <p className="text-xs leading-5 text-slate-500">{item.description}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </Card>
         </div>
@@ -257,26 +305,40 @@ export function MapViewport() {
             }
 
             const isSelected = region.id === regionId;
+            const isHovered = region.id === hoveredRegionId;
+            const isFocused =
+              sampleObservation.diseaseId === diseaseId && sampleObservation.age === age;
+            const cardPresentation = buildRegionCardPresentation({
+              isSelected,
+              isHovered,
+              isFocused,
+            });
 
             return (
               <button
                 key={region.id}
                 type="button"
                 onClick={() => setRegionId(region.id)}
+                onMouseEnter={() => setHoveredRegionId(region.id)}
+                onMouseLeave={() => setHoveredRegionId((current) => (current === region.id ? null : current))}
                 className={cn(
                   "rounded-3xl border border-white/60 p-4 text-left transition",
                   riskClasses[sampleObservation.riskLevel ?? "low"],
-                  isSelected
-                    ? "ring-4 ring-ocean/20"
-                    : "opacity-90 hover:-translate-y-0.5 hover:opacity-100",
+                  cardToneClasses[cardPresentation.tone],
                 )}
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.2em]">
-                  {region.province}
-                </p>
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em]">
+                    {region.province}
+                  </p>
+                  <span className="rounded-full bg-white/75 px-2 py-1 text-[10px] font-semibold text-slate-700">
+                    {cardPresentation.badge}
+                  </span>
+                </div>
                 <p className="mt-2 text-lg font-semibold">{region.name}</p>
-                <p className="mt-2 text-sm">
-                  {sampleObservation.trendSummary}
+                <p className="mt-2 text-sm">{sampleObservation.trendSummary}</p>
+                <p className="mt-3 text-xs leading-5 opacity-80">
+                  {cardPresentation.description}
                 </p>
               </button>
             );
