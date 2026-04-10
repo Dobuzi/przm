@@ -32,6 +32,7 @@
 - `TECH-STACK.md` 작성
 - `API.md` 작성
 - `DATA-PIPELINE.md` 작성
+- `SCHEMA.md` 작성
 
 ### 프론트엔드 초기 구현
 
@@ -99,6 +100,7 @@
 
 ### 3. 실제 데이터 파이프라인 준비
 
+- `SCHEMA.md` 기준으로 저장 구조 확정
 - `DATA-PIPELINE.md` 기준으로 세부 구현 문서 분해
 - 실제 관측 데이터 소스 최종 선정
 - snapshot 발행 규칙과 failure handling 구체화
