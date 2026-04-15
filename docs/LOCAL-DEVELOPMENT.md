@@ -133,8 +133,8 @@ tmp/ingestion/mock-ingestion-output.json
 
 현재 샘플 fixture 기준 예상 summary는 아래다.
 
-- raw `5`
-- normalized `2`
+- raw `7`
+- normalized `4`
 - quarantined `3`
 
 ## Mock analytics 실행
@@ -162,9 +162,9 @@ tmp/analytics/mock-snapshot-candidate.json
 현재 샘플 fixture 기준 예상 summary는 아래다.
 
 - snapshot `draft-2026-04-09`
-- observation `2`
-- forecast `2`
-- breakdown `2`
+- observation `4`
+- forecast `4`
+- breakdown `4`
 
 ## 검증 명령
 

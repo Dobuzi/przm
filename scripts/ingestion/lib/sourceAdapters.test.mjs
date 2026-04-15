@@ -17,7 +17,7 @@ describe("source adapters", () => {
 
     const records = await loadSourceRecords(adapter);
 
-    expect(records).toHaveLength(5);
+    expect(records).toHaveLength(7);
     expect(records[0]).toMatchObject({
       source_name: "sample-public-health",
       source_record_id: "sample-001",

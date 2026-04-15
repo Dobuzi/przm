@@ -27,6 +27,26 @@
       "trend_summary": "최근 관측 기준 완만한 확산 신호",
       "observed_on": "2026-04-09",
       "case_count": 12
+    },
+    {
+      "observation_id": "obs-11160-flu-a-7-2026-04-09",
+      "region_id": "11160",
+      "disease_id": "flu-a",
+      "age": 7,
+      "risk_level": "medium",
+      "trend_summary": "최근 관측 기준 완만한 확산 신호",
+      "observed_on": "2026-04-09",
+      "case_count": 13
+    },
+    {
+      "observation_id": "obs-31023-rsv-7-2026-04-09",
+      "region_id": "31023",
+      "disease_id": "rsv",
+      "age": 7,
+      "risk_level": "medium",
+      "trend_summary": "최근 관측 기준 완만한 확산 신호",
+      "observed_on": "2026-04-09",
+      "case_count": 11
     }
   ],
   "forecasts": [
@@ -45,6 +65,26 @@
       "region_id": "11160",
       "disease_id": "rsv",
       "age": 5,
+      "week_direction": "steady",
+      "month_direction": "decrease",
+      "confidence": "medium",
+      "generated_from_date": "2026-04-09"
+    },
+    {
+      "forecast_id": "fc-11160-flu-a-7-2026-04-09",
+      "region_id": "11160",
+      "disease_id": "flu-a",
+      "age": 7,
+      "week_direction": "steady",
+      "month_direction": "decrease",
+      "confidence": "medium",
+      "generated_from_date": "2026-04-09"
+    },
+    {
+      "forecast_id": "fc-31023-rsv-7-2026-04-09",
+      "region_id": "31023",
+      "disease_id": "rsv",
+      "age": 7,
       "week_direction": "steady",
       "month_direction": "decrease",
       "confidence": "medium",
@@ -155,12 +195,116 @@
           "cases": 7
         }
       ]
+    },
+    {
+      "region_id": "11160",
+      "disease_id": "flu-a",
+      "age": 7,
+      "summary": "최근 관측 기준 완만한 확산 신호",
+      "recent_trend": [
+        {
+          "week_label": "4주 전",
+          "risk_level": "low",
+          "cases": 7
+        },
+        {
+          "week_label": "3주 전",
+          "risk_level": "medium",
+          "cases": 8
+        },
+        {
+          "week_label": "2주 전",
+          "risk_level": "medium",
+          "cases": 9
+        },
+        {
+          "week_label": "이번 주",
+          "risk_level": "medium",
+          "cases": 13
+        }
+      ],
+      "age_distribution": [
+        {
+          "age": 6,
+          "cases": 7
+        },
+        {
+          "age": 7,
+          "cases": 13
+        },
+        {
+          "age": 8,
+          "cases": 9
+        }
+      ],
+      "gender_distribution": [
+        {
+          "gender": "male",
+          "cases": 8
+        },
+        {
+          "gender": "female",
+          "cases": 5
+        }
+      ]
+    },
+    {
+      "region_id": "31023",
+      "disease_id": "rsv",
+      "age": 7,
+      "summary": "최근 관측 기준 완만한 확산 신호",
+      "recent_trend": [
+        {
+          "week_label": "4주 전",
+          "risk_level": "low",
+          "cases": 5
+        },
+        {
+          "week_label": "3주 전",
+          "risk_level": "medium",
+          "cases": 6
+        },
+        {
+          "week_label": "2주 전",
+          "risk_level": "medium",
+          "cases": 7
+        },
+        {
+          "week_label": "이번 주",
+          "risk_level": "medium",
+          "cases": 11
+        }
+      ],
+      "age_distribution": [
+        {
+          "age": 6,
+          "cases": 5
+        },
+        {
+          "age": 7,
+          "cases": 11
+        },
+        {
+          "age": 8,
+          "cases": 7
+        }
+      ],
+      "gender_distribution": [
+        {
+          "gender": "male",
+          "cases": 4
+        },
+        {
+          "gender": "female",
+          "cases": 7
+        }
+      ]
     }
   ],
   "summary": {
-    "observationCount": 2,
-    "forecastCount": 2,
-    "breakdownCount": 2,
+    "observationCount": 4,
+    "forecastCount": 4,
+    "breakdownCount": 4,
     "observedUntil": "2026-04-09"
   }
 }

@@ -45,6 +45,17 @@ describe("fetchDashboardData", () => {
     expect(response.items[0].observation_id).toBe("obs-31023-flu-a-7-2026-04-09");
   });
 
+  it("prefers pipeline-derived observations when multiple valid snapshot candidates exist", async () => {
+    const response = await fetchObservations({
+      regionId: "11160",
+      diseaseId: "flu-a",
+      age: 7,
+    });
+
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].observation_id).toBe("obs-11160-flu-a-7-2026-04-09");
+  });
+
   it("fetches filtered forecasts as API records", async () => {
     const response = await fetchForecasts({
       regionId: "31023",
@@ -54,6 +65,17 @@ describe("fetchDashboardData", () => {
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].forecast_id).toBe("fc-31023-flu-a-7-2026-04-09");
+  });
+
+  it("prefers pipeline-derived forecasts when multiple valid snapshot candidates exist", async () => {
+    const response = await fetchForecasts({
+      regionId: "31023",
+      diseaseId: "rsv",
+      age: 7,
+    });
+
+    expect(response.items).toHaveLength(1);
+    expect(response.items[0].forecast_id).toBe("fc-31023-rsv-7-2026-04-09");
   });
 
   it("returns region and disease metadata", async () => {
@@ -88,6 +110,31 @@ describe("fetchDashboardData", () => {
     expect(response.gender_distribution).toEqual([
       { gender: "male", cases: 13 },
       { gender: "female", cases: 9 },
+    ]);
+  });
+
+  it("prefers pipeline-derived breakdowns when available for additional mock combinations", async () => {
+    const response = await fetchObservationBreakdown({
+      regionId: "11160",
+      diseaseId: "flu-a",
+      age: 7,
+    });
+
+    expect(response.summary).toBe("최근 관측 기준 완만한 확산 신호");
+    expect(response.recent_trend).toEqual([
+      { week_label: "4주 전", risk_level: "low", cases: 7 },
+      { week_label: "3주 전", risk_level: "medium", cases: 8 },
+      { week_label: "2주 전", risk_level: "medium", cases: 9 },
+      { week_label: "이번 주", risk_level: "medium", cases: 13 },
+    ]);
+    expect(response.age_distribution).toEqual([
+      { age: 7, cases: 13 },
+      { age: 6, cases: 7 },
+      { age: 8, cases: 9 },
+    ]);
+    expect(response.gender_distribution).toEqual([
+      { gender: "male", cases: 8 },
+      { gender: "female", cases: 5 },
     ]);
   });
 

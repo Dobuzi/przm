@@ -91,7 +91,7 @@
 - 요약 카드, 상세 패널, 지도 레이어가 선택 상태와 연결된 상태
 - 샘플 source fixture를 처리하는 mock ingestion runner가 동작하는 상태
 - ingestion 결과를 바탕으로 draft snapshot candidate를 만드는 mock analytics runner가 동작하는 상태
-- 일부 UI mock 응답이 pipeline-derived observation / forecast / breakdown을 사용하는 상태
+- 일부 핵심 UI mock 응답이 pipeline-derived observation / forecast / breakdown을 사용하는 상태
 
 아직 아래는 placeholder 또는 mock 기반입니다.
 

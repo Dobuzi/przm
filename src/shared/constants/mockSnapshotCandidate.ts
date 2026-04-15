@@ -30,6 +30,22 @@ export const mockSnapshotCandidate = {
       risk_level: "medium",
       trend_summary: "최근 관측 기준 완만한 확산 신호",
     },
+    {
+      observation_id: "obs-11160-flu-a-7-2026-04-09",
+      region_id: "11160",
+      disease_id: "flu-a",
+      age: 7,
+      risk_level: "medium",
+      trend_summary: "최근 관측 기준 완만한 확산 신호",
+    },
+    {
+      observation_id: "obs-31023-rsv-7-2026-04-09",
+      region_id: "31023",
+      disease_id: "rsv",
+      age: 7,
+      risk_level: "medium",
+      trend_summary: "최근 관측 기준 완만한 확산 신호",
+    },
   ] satisfies ObservationRecord[],
   forecasts: [
     {
@@ -46,6 +62,24 @@ export const mockSnapshotCandidate = {
       region_id: "11160",
       disease_id: "rsv",
       age: 5,
+      week_direction: "steady",
+      month_direction: "decrease",
+      confidence: "medium",
+    },
+    {
+      forecast_id: "fc-11160-flu-a-7-2026-04-09",
+      region_id: "11160",
+      disease_id: "flu-a",
+      age: 7,
+      week_direction: "steady",
+      month_direction: "decrease",
+      confidence: "medium",
+    },
+    {
+      forecast_id: "fc-31023-rsv-7-2026-04-09",
+      region_id: "31023",
+      disease_id: "rsv",
+      age: 7,
       week_direction: "steady",
       month_direction: "decrease",
       confidence: "medium",
@@ -92,6 +126,48 @@ export const mockSnapshotCandidate = {
       gender_distribution: [
         { gender: "male", cases: 5 },
         { gender: "female", cases: 7 },
+      ],
+    },
+    {
+      region_id: "11160",
+      disease_id: "flu-a",
+      age: 7,
+      summary: "최근 관측 기준 완만한 확산 신호",
+      recent_trend: [
+        { week_label: "4주 전", risk_level: "low", cases: 7 },
+        { week_label: "3주 전", risk_level: "medium", cases: 8 },
+        { week_label: "2주 전", risk_level: "medium", cases: 9 },
+        { week_label: "이번 주", risk_level: "medium", cases: 13 },
+      ],
+      age_distribution: [
+        { age: 6, cases: 7 },
+        { age: 7, cases: 13 },
+        { age: 8, cases: 9 },
+      ],
+      gender_distribution: [
+        { gender: "male", cases: 8 },
+        { gender: "female", cases: 5 },
+      ],
+    },
+    {
+      region_id: "31023",
+      disease_id: "rsv",
+      age: 7,
+      summary: "최근 관측 기준 완만한 확산 신호",
+      recent_trend: [
+        { week_label: "4주 전", risk_level: "low", cases: 5 },
+        { week_label: "3주 전", risk_level: "medium", cases: 6 },
+        { week_label: "2주 전", risk_level: "medium", cases: 7 },
+        { week_label: "이번 주", risk_level: "medium", cases: 11 },
+      ],
+      age_distribution: [
+        { age: 6, cases: 5 },
+        { age: 7, cases: 11 },
+        { age: 8, cases: 7 },
+      ],
+      gender_distribution: [
+        { gender: "male", cases: 5 },
+        { gender: "female", cases: 6 },
       ],
     },
   ] satisfies Array<

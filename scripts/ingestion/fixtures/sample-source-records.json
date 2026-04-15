@@ -48,5 +48,25 @@
     "age_raw": "15",
     "gender_raw": "M",
     "case_count_raw": "4"
+  },
+  {
+    "source_name": "sample-public-health",
+    "source_record_id": "sample-006",
+    "reported_date": "2026-04-09",
+    "region_label": "서울 강서구",
+    "disease_label": "Flu A",
+    "age_raw": "7세",
+    "gender_raw": "M",
+    "case_count_raw": "13"
+  },
+  {
+    "source_name": "sample-public-health",
+    "source_record_id": "sample-007",
+    "reported_date": "2026-04-09",
+    "region_label": "성남시 분당구",
+    "disease_label": "RSV",
+    "age_raw": "7세",
+    "gender_raw": "F",
+    "case_count_raw": "11"
   }
 ]

@@ -99,6 +99,46 @@
       "ageRaw": "15",
       "genderRaw": "M",
       "caseCountRaw": "4"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-006",
+      "sourcePayload": {
+        "source_name": "sample-public-health",
+        "source_record_id": "sample-006",
+        "reported_date": "2026-04-09",
+        "region_label": "서울 강서구",
+        "disease_label": "Flu A",
+        "age_raw": "7세",
+        "gender_raw": "M",
+        "case_count_raw": "13"
+      },
+      "reportedDate": "2026-04-09",
+      "regionLabel": "서울 강서구",
+      "diseaseLabel": "Flu A",
+      "ageRaw": "7세",
+      "genderRaw": "M",
+      "caseCountRaw": "13"
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-007",
+      "sourcePayload": {
+        "source_name": "sample-public-health",
+        "source_record_id": "sample-007",
+        "reported_date": "2026-04-09",
+        "region_label": "성남시 분당구",
+        "disease_label": "RSV",
+        "age_raw": "7세",
+        "gender_raw": "F",
+        "case_count_raw": "11"
+      },
+      "reportedDate": "2026-04-09",
+      "regionLabel": "성남시 분당구",
+      "diseaseLabel": "RSV",
+      "ageRaw": "7세",
+      "genderRaw": "F",
+      "caseCountRaw": "11"
     }
   ],
   "normalizedRecords": [
@@ -123,6 +163,30 @@
       "age": 5,
       "gender": "female",
       "caseCount": 12,
+      "isQuarantined": false,
+      "quarantineReason": null
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-006",
+      "date": "2026-04-09",
+      "regionId": "11160",
+      "diseaseId": "flu-a",
+      "age": 7,
+      "gender": "male",
+      "caseCount": 13,
+      "isQuarantined": false,
+      "quarantineReason": null
+    },
+    {
+      "sourceName": "sample-public-health",
+      "sourceRecordId": "sample-007",
+      "date": "2026-04-09",
+      "regionId": "31023",
+      "diseaseId": "rsv",
+      "age": 7,
+      "gender": "female",
+      "caseCount": 11,
       "isQuarantined": false,
       "quarantineReason": null
     }
@@ -166,8 +230,8 @@
     }
   ],
   "summary": {
-    "rawCount": 5,
-    "normalizedCount": 2,
+    "rawCount": 7,
+    "normalizedCount": 4,
     "quarantineCount": 3,
     "quarantineByReason": {
       "unsupported_region": 1,

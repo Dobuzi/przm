@@ -275,7 +275,7 @@ export function MapViewport() {
       duration: 900,
       essential: true,
     });
-  }, [regionId]);
+  }, [regionFeatures, regionId]);
 
   return (
     <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] border border-white/60 bg-[linear-gradient(140deg,#dbeafe_0%,#b9dff7_35%,#e7f2fb_100%)] shadow-panel">

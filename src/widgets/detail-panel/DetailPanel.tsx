@@ -83,10 +83,6 @@ export function DetailPanel() {
   const currentForecasts =
     forecastResponse?.items.map(normalizeForecast) ?? forecasts;
 
-  if (panelState === "closed") {
-    return null;
-  }
-
   const region = regions.find((item) => item.id === regionId);
   const disease = diseases.find((item) => item.id === diseaseId);
   const observation = currentObservations.find(
@@ -170,6 +166,10 @@ export function DetailPanel() {
             comparisonLabel: comparisonDisease.name,
           })
         : "";
+
+  if (panelState === "closed") {
+    return null;
+  }
 
   return (
     <Card className="h-full min-h-[420px] space-y-5 lg:max-w-[380px]">

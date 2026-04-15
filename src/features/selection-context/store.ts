@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { diseases, regions } from "@/shared/constants/mockData";
+import { diseases } from "@/shared/constants/mockData";
 
 type PanelState = "closed" | "open";
 
