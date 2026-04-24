@@ -37,6 +37,7 @@
 - `SNAPSHOTS.md` 작성
 - `FORECAST-PIPELINE.md` 작성
 - `SOURCE-MAPPINGS.md` 작성
+- `KDCA-HEALTHINFO-CONTENTS.md` 작성
 - `OPERATIONS.md` 작성
 - mock ingestion runner scaffold 추가
 - sample source adapter / normalization / quarantine 분리 구현
@@ -44,6 +45,8 @@
 - 한국어 공공데이터형 source record mapper 추가
 - `kdca-heat-illness` source preset 추가
 - 공공데이터포털 `response.body.items.item` 응답 selector 추가
+- 질병관리청 건강정보 API 신청 콘텐츠 ID 전체 목록 문서화
+- 전염병성 대표 건강정보 콘텐츠 ID와 질병 alias 후보 반영
 - mock analytics runner scaffold 추가
 - draft snapshot candidate 생성 구현
 - analytics 결과를 프론트 mock API용 generated fixture로 출력
@@ -104,6 +107,7 @@
 - 실제 질병 데이터 수집/가공 파이프라인
 - 실제 소스별 상세 field mapper 구현
 - 실제 공공데이터포털 인증키 기반 호출 검증
+- 질병관리청 건강정보 API 인증 URL 기반 실제 응답 shape 확인
 - 실제 응답의 컬럼명 차이 확인 및 preset 보정
 
 ## 다음 우선순위 작업
@@ -126,6 +130,8 @@
 - 실제 관측 데이터 소스 최종 선정
 - 실제 소스별 상세 field mapper 추가
 - `kdca-heat-illness` preset에 실제 공공데이터포털 URL / 인증키 적용 검증
+- 질병관리청 건강정보 API 대표 콘텐츠의 XML/JSON 응답 구조 확인 및 source preset 추가 여부 결정
+- 전염병성 대표 콘텐츠 목록을 MVP 질병 범위에 맞춰 축소/확장
 - ingestion output을 analytics / serving mock 생성과 더 넓게 연결
 - snapshot 발행 규칙과 failure handling 구체화
 

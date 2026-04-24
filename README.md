@@ -49,6 +49,7 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 - [`docs/SNAPSHOTS.md`](./docs/SNAPSHOTS.md): draft, published, superseded, failed 기준의 snapshot 발행 규칙
 - [`docs/FORECAST-PIPELINE.md`](./docs/FORECAST-PIPELINE.md): forecast 입력, 생성, validation, snapshot 연결 흐름
 - [`docs/SOURCE-MAPPINGS.md`](./docs/SOURCE-MAPPINGS.md): 원천 지역명/질병명 alias, confidence, review, quarantine 규칙
+- [`docs/KDCA-HEALTHINFO-CONTENTS.md`](./docs/KDCA-HEALTHINFO-CONTENTS.md): 질병관리청 건강정보 API 콘텐츠 ID 전체 목록과 전염병성 대표 항목
 - [`docs/OPERATIONS.md`](./docs/OPERATIONS.md): 일일 배치 운영, health check, 재처리, rollback 기준
 - [`docs/PREDICTION.md`](./docs/PREDICTION.md): 예측 기능 구조와 사용자 노출 방식
 
@@ -63,7 +64,7 @@ PRZM은 한국어 "퍼짐"의 발음을 바탕으로 만든 이름으로, 지역
 
 ## Current Status
 
-현재는 제품 정의 문서, 지도 중심 MVP UI, mock/real 전환 가능한 API client 계층, mock ingestion runner, 그리고 draft snapshot candidate를 만드는 mock analytics runner까지 정리된 상태입니다. 테스트와 production build 검증까지 완료했습니다.
+현재는 제품 정의 문서, 지도 중심 MVP UI, mock/real 전환 가능한 API client 계층, mock ingestion runner, draft snapshot candidate를 만드는 mock analytics runner, 그리고 질병관리청 건강정보 API 콘텐츠 ID 기준 문서까지 정리된 상태입니다. 테스트와 production build 검증까지 완료했습니다.
 
 ## Local Setup
 
