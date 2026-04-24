@@ -40,6 +40,9 @@
 - `OPERATIONS.md` 작성
 - mock ingestion runner scaffold 추가
 - sample source adapter / normalization / quarantine 분리 구현
+- HTTP JSON source adapter와 `ingest:http` 실행 스크립트 추가
+- 한국어 공공데이터형 source record mapper 추가
+- `kdca-heat-illness` source preset 추가
 - mock analytics runner scaffold 추가
 - draft snapshot candidate 생성 구현
 - analytics 결과를 프론트 mock API용 generated fixture로 출력
@@ -98,7 +101,8 @@
 
 - 실제 백엔드 API 연결
 - 실제 질병 데이터 수집/가공 파이프라인
-- 실제 source adapter 구현
+- 실제 소스별 상세 field mapper 구현
+- 실제 공공데이터포털 인증키 기반 호출 검증
 
 ## 다음 우선순위 작업
 
@@ -118,7 +122,8 @@
 - `SOURCE-MAPPINGS.md` 기준으로 region / disease alias와 review 규칙 구체화
 - `OPERATIONS.md` 기준으로 일일 운영, health check, 재처리, rollback 기준 구체화
 - 실제 관측 데이터 소스 최종 선정
-- 실제 source adapter 추가
+- 실제 소스별 상세 field mapper 추가
+- `kdca-heat-illness` preset에 실제 공공데이터포털 URL / 인증키 적용 검증
 - ingestion output을 analytics / serving mock 생성과 더 넓게 연결
 - snapshot 발행 규칙과 failure handling 구체화
 

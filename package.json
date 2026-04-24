@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "ingest:mock": "node scripts/ingestion/run-mock-ingestion.mjs",
+    "ingest:http": "node scripts/ingestion/run-http-ingestion.mjs",
     "analytics:mock": "node scripts/analytics/run-mock-analytics.mjs"
   },
   "dependencies": {

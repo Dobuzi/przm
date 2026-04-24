@@ -34,6 +34,16 @@ describe("ingestRecords", () => {
         gender_raw: "M",
         case_count_raw: "8",
       },
+      {
+        source_name: "sample",
+        source_record_id: "4",
+        reported_date: "2026-04-09",
+        region_label: "서울특별시 강서구",
+        disease_label: "heat illness",
+        age_raw: "7",
+        gender_raw: "남",
+        case_count_raw: "3",
+      },
     ]);
 
     expect(result.normalizedRecords).toEqual([
@@ -46,6 +56,18 @@ describe("ingestRecords", () => {
         age: 7,
         gender: "male",
         caseCount: 22,
+        isQuarantined: false,
+        quarantineReason: null,
+      },
+      {
+        sourceName: "sample",
+        sourceRecordId: "4",
+        date: "2026-04-09",
+        regionId: "11160",
+        diseaseId: "heat-illness",
+        age: 7,
+        gender: "male",
+        caseCount: 3,
         isQuarantined: false,
         quarantineReason: null,
       },

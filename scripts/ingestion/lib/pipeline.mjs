@@ -16,6 +16,9 @@ const diseaseAliases = new Map([
   ["respiratory syncytial virus", "rsv"],
   ["adeno", "adeno"],
   ["adenovirus", "adeno"],
+  ["heat illness", "heat-illness"],
+  ["heat-illness", "heat-illness"],
+  ["온열질환", "heat-illness"],
 ]);
 
 function normalizeText(value) {

@@ -137,6 +137,62 @@ tmp/ingestion/mock-ingestion-output.json
 - normalized `4`
 - quarantined `3`
 
+## HTTP ingestion 실행
+
+실제 HTTP JSON 소스를 로컬에서 시험하려면 아래 환경 변수를 설정한다.
+
+```bash
+PRZM_SOURCE_URL=https://example.com/observations \
+PRZM_SOURCE_NAME=sample-public-health \
+npm run ingest:http
+```
+
+응답 payload는 배열이거나 `{ "items": [...] }` 또는 `{ "data": [...] }` 형태를 지원한다. 각 record의 필드명은 현재 ingestion pipeline 기준인 `source_name`, `source_record_id`, `reported_date`, `region_label`, `disease_label`, `age_raw`, `gender_raw`, `case_count_raw`와 맞아야 한다.
+
+한국어 공공데이터형 필드를 PRZM ingestion field로 변환하려면 아래처럼 실행한다.
+
+```bash
+PRZM_SOURCE_URL=https://example.com/observations \
+PRZM_SOURCE_NAME=sample-public-health \
+PRZM_SOURCE_FORMAT=korean-public-health \
+PRZM_DEFAULT_DISEASE_LABEL="heat illness" \
+npm run ingest:http
+```
+
+`korean-public-health` format은 기본적으로 아래 필드를 읽는다.
+
+- `발생일자`
+- `발생시도`
+- `발생시군구`
+- `질병명`
+- `나이`
+- `성별`
+- `신고건수`
+
+질병명이 없는 감시 데이터는 `PRZM_DEFAULT_DISEASE_LABEL`을 사용한다.
+
+질병관리청 온열질환 감시 데이터처럼 `발생일자`, `성별`, `나이`, `발생시도`, `발생시군구` 필드를 제공하는 소스는 아래 preset을 사용할 수 있다.
+
+```bash
+PRZM_SOURCE_PRESET=kdca-heat-illness \
+PRZM_SOURCE_URL=https://example.com/kdca-heat-illness-api \
+npm run ingest:http
+```
+
+`kdca-heat-illness` preset은 아래 값을 기본으로 적용한다.
+
+- source name: `kdca-heat-illness`
+- source format: `korean-public-health`
+- default disease label: `heat illness`
+
+실제 공공데이터포털 오픈API는 활용신청과 인증키가 필요하므로, URL에는 인증키를 포함한 실제 요청 URL을 넣어야 한다.
+
+이 명령은 아래 파일을 생성한다.
+
+```text
+tmp/ingestion/http-ingestion-output.json
+```
+
 ## Mock analytics 실행
 
 ingestion 결과를 바탕으로 snapshot candidate와 serving용 초안 데이터를 만들려면 아래 명령을 사용한다.
@@ -173,7 +229,7 @@ src/shared/constants/generated/mockSnapshotCandidate.generated.ts
 
 ```bash
 npm run test -- src/shared/api/client.test.ts src/shared/api/mockApi.test.ts src/shared/api/adapters.test.ts src/shared/lib/forecastPresentation.test.ts src/features/map/lib/mapPresentation.test.ts src/features/map/lib/mapModel.test.ts
-npm run test -- scripts/ingestion/lib/pipeline.test.mjs scripts/ingestion/lib/sourceAdapters.test.mjs scripts/analytics/lib/snapshotCandidate.test.mjs scripts/analytics/lib/mockSnapshotFixture.test.mjs
+npm run test -- scripts/ingestion/lib/pipeline.test.mjs scripts/ingestion/lib/sourceAdapters.test.mjs scripts/ingestion/lib/sourceRecordMappers.test.mjs scripts/analytics/lib/snapshotCandidate.test.mjs scripts/analytics/lib/mockSnapshotFixture.test.mjs
 npm run ingest:mock
 npm run analytics:mock
 npm run build

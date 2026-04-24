@@ -81,10 +81,12 @@ npm run analytics:mock
 
 `npm run analytics:mock`은 ingestion 결과를 바탕으로 `tmp/analytics/mock-snapshot-candidate.json`에 draft snapshot candidate, observation, forecast, breakdown 결과를 생성하고, 프론트 mock API용 fixture를 `src/shared/constants/generated/mockSnapshotCandidate.generated.ts`에 갱신합니다.
 
+실제 HTTP JSON 소스를 시험할 때는 `PRZM_SOURCE_URL`을 지정한 뒤 `npm run ingest:http`를 실행합니다. 한국어 공공데이터형 필드는 `PRZM_SOURCE_FORMAT=korean-public-health`로 PRZM ingestion field에 매핑할 수 있고, 질병관리청 온열질환 감시 데이터 형태는 `PRZM_SOURCE_PRESET=kdca-heat-illness`로 시작할 수 있습니다. 자세한 입력 shape는 [`docs/LOCAL-DEVELOPMENT.md`](./docs/LOCAL-DEVELOPMENT.md)에 정리되어 있습니다.
+
 자세한 로컬 개발 방법은 [`docs/LOCAL-DEVELOPMENT.md`](./docs/LOCAL-DEVELOPMENT.md) 에 정리되어 있습니다.
 
 다음으로 자연스러운 작업은 아래 중 하나입니다.
 
 1. 실제 `real` API 서버와 연결 검증
-2. 실제 source adapter 추가와 ingestion / analytics runner 확장
+2. 실제 소스별 field mapper 추가와 ingestion / analytics runner 확장
 3. pipeline-derived breakdown coverage 확대
