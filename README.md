@@ -79,7 +79,7 @@ npm run analytics:mock
 
 `npm run ingest:mock`은 샘플 source fixture를 읽어 `tmp/ingestion/mock-ingestion-output.json`에 normalized / quarantined 결과와 summary를 생성합니다.
 
-`npm run analytics:mock`은 ingestion 결과를 바탕으로 `tmp/analytics/mock-snapshot-candidate.json`에 draft snapshot candidate, observation, forecast, breakdown 결과를 생성합니다.
+`npm run analytics:mock`은 ingestion 결과를 바탕으로 `tmp/analytics/mock-snapshot-candidate.json`에 draft snapshot candidate, observation, forecast, breakdown 결과를 생성하고, 프론트 mock API용 fixture를 `src/shared/constants/generated/mockSnapshotCandidate.generated.ts`에 갱신합니다.
 
 자세한 로컬 개발 방법은 [`docs/LOCAL-DEVELOPMENT.md`](./docs/LOCAL-DEVELOPMENT.md) 에 정리되어 있습니다.
 

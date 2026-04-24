@@ -42,6 +42,7 @@
 - sample source adapter / normalization / quarantine 분리 구현
 - mock analytics runner scaffold 추가
 - draft snapshot candidate 생성 구현
+- analytics 결과를 프론트 mock API용 generated fixture로 출력
 
 ### 프론트엔드 초기 구현
 
@@ -66,7 +67,7 @@
 - 상세 패널 보조 비교 기능 추가 (`지역 비교`, `질병 비교`)
 - 비교 기능의 지도 연동 확장
 - 로컬 개발 문서 및 환경 변수 정리
-- mock observation / forecast / breakdown의 일부를 pipeline-derived snapshot candidate와 연결
+- mock observation / forecast / breakdown의 일부를 generated pipeline-derived fixture와 연결
 
 ### 검증 완료 항목
 
@@ -91,7 +92,7 @@
 - 요약 카드, 상세 패널, 지도 레이어가 선택 상태와 연결된 상태
 - 샘플 source fixture를 처리하는 mock ingestion runner가 동작하는 상태
 - ingestion 결과를 바탕으로 draft snapshot candidate를 만드는 mock analytics runner가 동작하는 상태
-- 일부 핵심 UI mock 응답이 pipeline-derived observation / forecast / breakdown을 사용하는 상태
+- 일부 핵심 UI mock 응답이 generated pipeline-derived observation / forecast / breakdown을 사용하는 상태
 
 아직 아래는 placeholder 또는 mock 기반입니다.
 

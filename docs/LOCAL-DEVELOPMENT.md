@@ -149,6 +149,7 @@ npm run analytics:mock
 
 ```text
 tmp/analytics/mock-snapshot-candidate.json
+src/shared/constants/generated/mockSnapshotCandidate.generated.ts
 ```
 
 출력에는 아래가 포함된다.
@@ -158,6 +159,8 @@ tmp/analytics/mock-snapshot-candidate.json
 - `forecasts`
 - `breakdowns`
 - `summary`
+
+프론트 mock API는 generated TypeScript fixture를 import하므로, 샘플 source fixture를 바꾼 뒤에는 `npm run ingest:mock`과 `npm run analytics:mock`을 함께 실행해야 UI mock 응답도 최신 상태가 된다.
 
 현재 샘플 fixture 기준 예상 summary는 아래다.
 
@@ -170,7 +173,7 @@ tmp/analytics/mock-snapshot-candidate.json
 
 ```bash
 npm run test -- src/shared/api/client.test.ts src/shared/api/mockApi.test.ts src/shared/api/adapters.test.ts src/shared/lib/forecastPresentation.test.ts src/features/map/lib/mapPresentation.test.ts src/features/map/lib/mapModel.test.ts
-npm run test -- scripts/ingestion/lib/pipeline.test.mjs scripts/ingestion/lib/sourceAdapters.test.mjs scripts/analytics/lib/snapshotCandidate.test.mjs
+npm run test -- scripts/ingestion/lib/pipeline.test.mjs scripts/ingestion/lib/sourceAdapters.test.mjs scripts/analytics/lib/snapshotCandidate.test.mjs scripts/analytics/lib/mockSnapshotFixture.test.mjs
 npm run ingest:mock
 npm run analytics:mock
 npm run build
@@ -180,4 +183,4 @@ npm run build
 
 - `real` 모드용 API는 아직 실제 서버와 연결 검증을 완료한 상태는 아니다.
 - 인증, 에러 코드 세분화, 재시도 전략은 이후 API 연결 단계에서 더 구체화해야 한다.
-- mock 데이터는 현재 서울/경기 일부 샘플 조합 중심이며, 일부 observation / forecast / breakdown은 pipeline-derived snapshot candidate를 우선 사용한다.
+- mock 데이터는 현재 서울/경기 일부 샘플 조합 중심이며, 일부 observation / forecast / breakdown은 generated pipeline-derived fixture를 우선 사용한다.
