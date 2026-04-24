@@ -10,6 +10,7 @@ import {
   mapSourceRecords,
 } from "./lib/sourceRecordMappers.mjs";
 import { resolveSourceConfig } from "./lib/sourcePresets.mjs";
+import { selectJsonRecords } from "./lib/sourceResponseSelectors.mjs";
 
 const sourceConfig = resolveSourceConfig({
   preset: process.env.PRZM_SOURCE_PRESET,
@@ -20,22 +21,6 @@ const sourceConfig = resolveSourceConfig({
 });
 const outputDir = path.join(process.cwd(), "tmp", "ingestion");
 const outputPath = path.join(outputDir, "http-ingestion-output.json");
-
-function selectRecords(payload) {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  if (Array.isArray(payload?.items)) {
-    return payload.items;
-  }
-
-  if (Array.isArray(payload?.data)) {
-    return payload.data;
-  }
-
-  return payload;
-}
 
 function mapRecords(records) {
   if (sourceConfig.sourceFormat === "korean-public-health") {
@@ -59,7 +44,7 @@ async function main() {
   const adapter = createHttpJsonSourceAdapter({
     sourceName: sourceConfig.sourceName,
     url: sourceConfig.sourceUrl,
-    selectRecords,
+    selectRecords: selectJsonRecords,
   });
   const records = mapRecords(await loadSourceRecords(adapter));
   const result = ingestRecords(records);

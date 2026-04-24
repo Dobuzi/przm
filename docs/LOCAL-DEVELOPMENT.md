@@ -147,7 +147,7 @@ PRZM_SOURCE_NAME=sample-public-health \
 npm run ingest:http
 ```
 
-응답 payload는 배열이거나 `{ "items": [...] }` 또는 `{ "data": [...] }` 형태를 지원한다. 각 record의 필드명은 현재 ingestion pipeline 기준인 `source_name`, `source_record_id`, `reported_date`, `region_label`, `disease_label`, `age_raw`, `gender_raw`, `case_count_raw`와 맞아야 한다.
+응답 payload는 배열, `{ "items": [...] }`, `{ "data": [...] }`, 또는 공공데이터포털에서 흔히 쓰는 `{ "response": { "body": { "items": { "item": [...] } } } }` 형태를 지원한다. 각 record의 필드명은 현재 ingestion pipeline 기준인 `source_name`, `source_record_id`, `reported_date`, `region_label`, `disease_label`, `age_raw`, `gender_raw`, `case_count_raw`와 맞아야 한다.
 
 한국어 공공데이터형 필드를 PRZM ingestion field로 변환하려면 아래처럼 실행한다.
 
@@ -185,7 +185,7 @@ npm run ingest:http
 - source format: `korean-public-health`
 - default disease label: `heat illness`
 
-실제 공공데이터포털 오픈API는 활용신청과 인증키가 필요하므로, URL에는 인증키를 포함한 실제 요청 URL을 넣어야 한다.
+실제 공공데이터포털 오픈API는 활용신청과 인증키가 필요하므로, URL에는 인증키와 query parameter를 포함한 실제 요청 URL을 넣어야 한다.
 
 이 명령은 아래 파일을 생성한다.
 

@@ -43,6 +43,7 @@
 - HTTP JSON source adapter와 `ingest:http` 실행 스크립트 추가
 - 한국어 공공데이터형 source record mapper 추가
 - `kdca-heat-illness` source preset 추가
+- 공공데이터포털 `response.body.items.item` 응답 selector 추가
 - mock analytics runner scaffold 추가
 - draft snapshot candidate 생성 구현
 - analytics 결과를 프론트 mock API용 generated fixture로 출력
@@ -103,6 +104,7 @@
 - 실제 질병 데이터 수집/가공 파이프라인
 - 실제 소스별 상세 field mapper 구현
 - 실제 공공데이터포털 인증키 기반 호출 검증
+- 실제 응답의 컬럼명 차이 확인 및 preset 보정
 
 ## 다음 우선순위 작업
 
